@@ -1,0 +1,27 @@
+.sideNav {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 6fr;
+}
+.manu {
+  border: 2px solid rgba(17, 131, 136);
+  border-radius: 15px;
+  padding: 40px;
+  margin: 20px 0;
+  background-color: rgba(17, 130, 136, 0.096);
+}
+.manu p {
+  margin: 15px 0;
+}
+.manu-bg{
+    background-color:rgba(17, 131, 136) ;
+    color:rgb(203, 228, 222);
+    width: 100%;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 50px;
+}
+.manu-p{
+    padding: 10px 15px;
+}

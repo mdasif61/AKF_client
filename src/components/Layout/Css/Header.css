@@ -1,0 +1,24 @@
+.bg-color {
+  background-color: rgb(44, 51, 51);
+  color: rgb(203, 228, 222);
+  border-radius: 50px;
+  max-width: 1240px;
+  margin: 0px auto;
+  position: sticky;
+  top:0;
+}
+nav a {
+  margin-left: 25px;
+}
+.login {
+  border: 1px solid rgb(203, 228, 222);
+  background-color: transparent;
+  padding: 7px 22px;
+  border-radius: 50px;
+}
+.registers {
+  background-color: rgb(203, 228, 222);
+  padding: 7px 22px;
+  border-radius: 50px;
+  color: rgb(44, 51, 51);
+}

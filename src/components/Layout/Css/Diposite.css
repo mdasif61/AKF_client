@@ -1,0 +1,11 @@
+.inputName{
+    border:1.5px solid rgba(17, 131, 136)
+}
+.inputName input{
+    border:none;
+    outline: none;
+}
+.dipositeInfo{
+    display: grid;
+    grid-template-columns: auto auto;
+}

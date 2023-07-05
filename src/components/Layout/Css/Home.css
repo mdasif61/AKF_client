@@ -1,0 +1,41 @@
+.home {
+  background: url("/public/Images/map.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  max-width: 1240px;
+  min-height: 100vh;
+  margin: 0 auto;
+}
+.get {
+  background-color: rgb(204, 68, 44);
+  color: white;
+  padding: 10px 30px;
+  font-size: 23px;
+  border-radius: 50px;
+  transition: all 0.1s;
+}
+.get:hover {
+  background-color: transparent;
+  border: 2px solid rgb(204, 68, 44);
+  color: rgb(204, 68, 44);
+}
+.emailInput {
+  width: 100%;
+  background-color: rgb(203, 228, 222);
+  border: 2px solid rgb(17, 131, 136);
+  position: relative;
+  outline: none;
+  font-size: 20px;
+  color: rgb(17, 131, 136);
+}
+.send {
+  background-color: rgb(17, 131, 136);
+}
+.sendBtnDiv {
+  position: absolute;
+  right: 10px;
+}
+.emailInput::placeholder {
+  color: rgb(17, 131, 136);
+}
