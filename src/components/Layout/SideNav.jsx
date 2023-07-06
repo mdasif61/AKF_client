@@ -1,14 +1,14 @@
 import React from "react";
 import "./Css/SideNav.css";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const SideNav = ({ children }) => {
   return (
-    <div className="sideNav h-[70vh]">
+    <div className="sideNav min-h-screen">
       <div className="manu">
         <p>
           <NavLink
-            to="/diposite"
+            to="/dashboard/diposite"
             className={({ isActive }) => (isActive ? "manu-bg" : "manu-p")}
           >
             Diposite Now
@@ -16,25 +16,30 @@ const SideNav = ({ children }) => {
         </p>
         <p>
           <NavLink
-            to="/history"
+            to="/dashboard/history"
             className={({ isActive }) => (isActive ? "manu-bg" : "manu-p")}
           >
             Diposite History
           </NavLink>
         </p>
         <p>
-          <NavLink to='/settings'
+          <NavLink to='/dashboard/settings'
             className={({ isActive }) => (isActive ? "manu-bg" : "manu-p")}
           >
             Settings
           </NavLink>
         </p>
         <p>
-          <NavLink to='/profile'
+          <NavLink to='/dashboard/profile'
             className={({ isActive }) => (isActive ? "manu-bg" : "manu-p")}
           >
             Profile
           </NavLink>
+        </p>
+        <p>
+          <Link className="manu-p" to='/'>
+          <button className=" text-black">Back To Home</button>
+          </Link>
         </p>
       </div>
       <div className="diposite">

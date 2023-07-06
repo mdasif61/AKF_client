@@ -27,7 +27,7 @@ const Header = () => {
       <img className="h-[60%] ml-4" src={navlogo} alt="" />
       <nav className="flex items-center">
         <NavLink to="/">Home</NavLink>
-        {user && <NavLink to="/service">Dashboard</NavLink>}
+        {user && <NavLink to="/dashboard/diposite">Dashboard</NavLink>}
         <NavLink to="/about">About</NavLink>
         <NavLink to="/blog">Blog</NavLink>
         <NavLink to="/contact">Contact</NavLink>

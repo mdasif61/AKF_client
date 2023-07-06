@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
 import SideNav from './SideNav';
-import { mainContext } from '../NavPage/AuthProvider';
 import useTitle from '../hooks/useTitle';
+import useAllUser from '../hooks/useAllUser';
 
 const Profile = () => {
     useTitle("Profile")
-    const {user}=useContext(mainContext);
-    console.log(user)
+    const {users}=useAllUser()
+    console.log(users)
 
     return (
         <div>

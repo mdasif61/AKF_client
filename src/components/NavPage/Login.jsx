@@ -27,14 +27,15 @@ const Login = () => {
       .then((result) => {
         console.log(result);
         toast.success("successfully login");
-        if (result.user.emailVerified) {
-          setTimeout(() => {
-            navigate(from);
-          }, 1000);
-          return;
-        } else {
-          alert("please verify your email");
-        }
+        navigate(from);
+        // if (result.user.emailVerified) {
+        //   setTimeout(() => {
+        //     navigate(from);
+        //   }, 1000);
+        //   return;
+        // } else {
+        //   alert("please verify your email");
+        // }
       })
       .catch((error) => {
         setError(error.message);

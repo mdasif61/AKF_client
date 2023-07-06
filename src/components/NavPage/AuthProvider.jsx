@@ -13,6 +13,11 @@ import {
 import { app } from "../firebase/firebase";
 import axios from "axios";
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
 const auth = getAuth(app);
 
 export const mainContext = createContext();
@@ -44,12 +49,12 @@ const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
-  const emailVerify = (email) => {
-    return sendEmailVerification(email);
-  };
+  // const emailVerify = (email) => {
+  //   return sendEmailVerification(email);
+  // };
 
-  const upDateProfile = (user, photo, names) => {
-    return updateProfile(user, {
+  const upDateProfile = (names, photo) => {
+    return updateProfile(auth.currentUser, {
       displayName: names,
       photoURL: photo,
     });
@@ -58,10 +63,16 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      console.log(currentUser)
-      // axios.post('/users',)
-
-      setLoading(false);
+      if (currentUser && currentUser?.email) {
+        axios.post('http://localhost:5000/jwt', { email: currentUser.email })
+          .then(res => {
+            localStorage.setItem('access_token', res.data.token)
+            setLoading(false);
+          })
+      }
+      else {
+        localStorage.removeItem('access_token')
+      }
     });
     return () => {
       unSubscribe();
@@ -91,16 +102,20 @@ const AuthProvider = ({ children }) => {
     logOut,
     fbLogin,
     forgot,
-    emailVerify,
+    // emailVerify,
     info,
     name,
     googleLogin,
     upDateProfile,
   };
 
+  const queryClient = new QueryClient()
+
   return (
     <div>
-      <mainContext.Provider value={userInfo}>{children}</mainContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <mainContext.Provider value={userInfo}>{children}</mainContext.Provider>
+      </QueryClientProvider>
     </div>
   );
 };

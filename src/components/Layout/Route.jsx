@@ -24,10 +24,6 @@ const router = createBrowserRouter([
         element: <Home></Home>,
       },
       {
-        path: "/service",
-        element: <PrivateRoute><Service></Service></PrivateRoute>,
-      },
-      {
         path: "/blog",
         element: <PrivateRoute><Blog></Blog></PrivateRoute>,
       },
@@ -48,26 +44,35 @@ const router = createBrowserRouter([
         element: <Register></Register>,
       },
       {
-        path: "/diposite",
+        path: '/blog/:id',
+        element: <SinglePost></SinglePost>,
+      }
+    ],
+  },
+
+  // dashboard routes
+
+  {
+    path: "/dashboard",
+    element: <PrivateRoute><Service></Service></PrivateRoute>,
+    children: [
+      {
+        path: "diposite",
         element: <PrivateRoute><Diposite></Diposite></PrivateRoute>,
       },
       {
-        path: "/history",
+        path: "history",
         element: <PrivateRoute><History></History></PrivateRoute>,
       },
       {
-        path:'/settings',
-        element:<PrivateRoute><Settings></Settings></PrivateRoute>
+        path: 'settings',
+        element: <PrivateRoute><Settings></Settings></PrivateRoute>
       },
       {
-        path:'/profile',
-        element:<PrivateRoute><Profile></Profile></PrivateRoute>
+        path: 'profile',
+        element: <PrivateRoute><Profile></Profile></PrivateRoute>
       },
-      {
-        path:'/blog/:id',
-        element:<SinglePost></SinglePost>,
-      }
-    ],
+    ]
   },
 ]);
 
