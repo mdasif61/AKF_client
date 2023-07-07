@@ -13,10 +13,7 @@ import {
 import { app } from "../firebase/firebase";
 import axios from "axios";
 
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const auth = getAuth(app);
 
@@ -64,14 +61,14 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser && currentUser?.email) {
-        axios.post('http://localhost:5000/jwt', { email: currentUser.email })
-          .then(res => {
-            localStorage.setItem('access_token', res.data.token)
+        axios
+          .post("http://localhost:5000/jwt", { email: currentUser.email })
+          .then((res) => {
+            localStorage.setItem("access_token", res.data.token);
             setLoading(false);
-          })
-      }
-      else {
-        localStorage.removeItem('access_token')
+          });
+      } else {
+        localStorage.removeItem("access_token");
       }
     });
     return () => {
@@ -109,7 +106,7 @@ const AuthProvider = ({ children }) => {
     upDateProfile,
   };
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   return (
     <div>

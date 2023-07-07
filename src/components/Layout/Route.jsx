@@ -9,10 +9,11 @@ import Login from "../NavPage/Login";
 import Register from "../NavPage/Register";
 import Diposite from "./Diposite";
 import History from "./History";
-import Settings from "./Settings";
 import Profile from "./Profile";
 import PrivateRoute from "./PrivateRoute";
 import SinglePost from "./SinglePost";
+import ProfileSetting from "./ProfileSetting";
+import Security from "./Security";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/blog",
-        element: <PrivateRoute><Blog></Blog></PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <Blog></Blog>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/about",
@@ -44,9 +49,9 @@ const router = createBrowserRouter([
         element: <Register></Register>,
       },
       {
-        path: '/blog/:id',
+        path: "/blog/:id",
         element: <SinglePost></SinglePost>,
-      }
+      },
     ],
   },
 
@@ -54,25 +59,45 @@ const router = createBrowserRouter([
 
   {
     path: "/dashboard",
-    element: <PrivateRoute><Service></Service></PrivateRoute>,
+    element: (
+      <PrivateRoute>
+        <Service></Service>
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "diposite",
-        element: <PrivateRoute><Diposite></Diposite></PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <Diposite></Diposite>
+          </PrivateRoute>
+        ),
       },
       {
         path: "history",
-        element: <PrivateRoute><History></History></PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <History></History>
+          </PrivateRoute>
+        ),
       },
       {
-        path: 'settings',
-        element: <PrivateRoute><Settings></Settings></PrivateRoute>
+        path: "profile-setting",
+        element: <ProfileSetting></ProfileSetting>,
       },
       {
-        path: 'profile',
-        element: <PrivateRoute><Profile></Profile></PrivateRoute>
+        path:'security',
+        element:<Security></Security>
       },
-    ]
+      {
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <Profile></Profile>
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
 ]);
 
