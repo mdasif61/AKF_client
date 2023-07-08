@@ -6,7 +6,7 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 const MyBlog = ({ blog }) => {
     const { users } = useAllUser()
     return (
-        <div className='w-full border p-5 rounded-xl'>
+        <div className='w-full border p-5 mb-5 rounded-xl'>
             <div className='flex items-center mb-4'>
                 <div className="avatar">
                     <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">

@@ -14,7 +14,7 @@ const SideNav = ({ children }) => {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="sideNav min-h-screen">
+    <div className="sideNav">
       <div className="manu">
         <p>
           <NavLink

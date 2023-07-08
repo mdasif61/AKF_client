@@ -32,7 +32,7 @@ const Profile = () => {
     <div>
       <SideNav>
         <div className="profile shadow-lg">
-          <div className="w-full h-full flex items-center justify-between">
+          <div className="w-full flex items-center justify-between">
             <div className="w-36 h-36 bg-white shadow-xl border-2 rounded-full flex items-center justify-center overflow-hidden">
               <img className="w-full" src={users.image} alt="" />
             </div>
@@ -80,7 +80,7 @@ const Profile = () => {
                 <span className="font-normal">Gender : </span> {users.gender}
               </p>
             </div>
-            <div className="md:col-span-3">
+            <div className="md:col-span-3 overflow-scroll">
               {
                 !isLoading ? blogs.map((blog) => <MyBlog
                   key={blog._id}
