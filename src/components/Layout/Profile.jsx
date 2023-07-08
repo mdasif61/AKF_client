@@ -2,19 +2,31 @@ import SideNav from "./SideNav";
 import useTitle from "../hooks/useTitle";
 import useAllUser from "../hooks/useAllUser";
 import "./Css/Profile.css";
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal";
 import { useState } from "react";
+import useMyBlog from "../hooks/useMyBlog";
+import MyBlog from "../MyBlog";
 
 const Profile = () => {
   useTitle("Profile");
   const { users } = useAllUser();
   const [isOpen, setIsOpen] = useState(false);
+  const [modalData, setModalData] = useState(null)
 
-  const { handleSubmit, register } = useForm();
+  const { blogs, isLoading } = useMyBlog()
+
+  const handleOpen = (data) => {
+    setIsOpen(true)
+    setModalData(data)
+  }
+
+  const handleClose = () => {
+    setIsOpen(false)
+    setModalData(null)
+  }
 
   return (
     <div>
@@ -41,12 +53,12 @@ const Profile = () => {
                 </button>
               </Link>
               <button
-                onClick={() => window.my_modal_3.showModal()}
+                onClick={() => handleOpen(users)}
                 className="btn bg-black ml-2"
               >
                 <FontAwesomeIcon className="mr-2" icon={faPlus} /> Add Your Blog
               </button>
-              <Modal/>
+              {isOpen && <Modal handleClose={handleClose} data={modalData} />}
             </div>
           </div>
           <div className="grid gap-5 grid-cols-1 md:grid-cols-5 h-full mt-7">
@@ -68,8 +80,13 @@ const Profile = () => {
                 <span className="font-normal">Gender : </span> {users.gender}
               </p>
             </div>
-            <div className="md:col-span-3 bg-white border rounded-xl p-5">
-              <h1>All Post</h1>
+            <div className="md:col-span-3">
+              {
+                !isLoading ? blogs.map((blog) => <MyBlog
+                  key={blog._id}
+                  blog={blog}
+                ></MyBlog>):<h1 className="text-blue-500">Loading...</h1>
+              }
             </div>
           </div>
         </div>
