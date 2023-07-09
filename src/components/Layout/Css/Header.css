@@ -1,9 +1,6 @@
 .bg-color {
   background-color: rgb(44, 51, 51);
   color: rgb(203, 228, 222);
-  border-radius: 50px;
-  max-width: 1240px;
-  margin: 0px auto;
   position: sticky;
   top:0;
 }

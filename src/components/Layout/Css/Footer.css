@@ -1,10 +1,7 @@
 .footer {
-  max-width: 1240px;
-  margin: 0 auto;
   background-color: rgb(47, 79, 79);
-  margin-bottom: 20px;
-  border-radius: 0 0 30px 30px;
   padding: 30px;
+  width: 100%;
 }
 .footer a {
   color: rgb(203, 228, 222);
