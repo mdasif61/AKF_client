@@ -1,7 +1,8 @@
 .profile {
-  min-height: 100vh;
   border-radius: 15px;
-  margin: 20px 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
   padding: 40px;
   background-color: white;
 }

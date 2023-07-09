@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAllUser from './hooks/useAllUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const MyBlog = ({ blog }) => {
     const { users } = useAllUser()
+    const [open, setOpen] = useState(false)
     return (
         <div className='w-full border p-5 mb-5 rounded-xl'>
             <div className='flex items-center mb-4'>
@@ -16,8 +17,18 @@ const MyBlog = ({ blog }) => {
                 <div className='flex-1 ml-4'>
                     <h3 className='font-bold'>{users?.name}</h3>
                 </div>
-                <div>
-                    <FontAwesomeIcon className='cursor-pointer hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full' icon={faEllipsis}/>
+                <div className='relative'>
+                    <FontAwesomeIcon onClick={() => setOpen(!open)} className={`cursor-pointer ${open&& 'bg-gray-200'} hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`} icon={faEllipsis} />
+
+                    {
+                        open &&
+                        <div className='bg-white border w-36 rounded-lg p-3 absolute right-0'>
+                            <ul className='text-gray-500'>
+                                <li className='py-2 border-b cursor-pointer'><FontAwesomeIcon className='mr-2' icon={faTrash}/> Delete</li>
+                                <li className='py-2 border-b cursor-pointer'><FontAwesomeIcon className='mr-2' icon={faEdit}/> Edit</li>
+                            </ul>
+                        </div>
+                    }
                 </div>
             </div>
 

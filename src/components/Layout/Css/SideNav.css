@@ -1,15 +1,22 @@
 .sideNav {
+  display: flex;
   max-width: 1240px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 6fr;
+  justify-content: space-between;
 }
-.manu {
+.manu{
   border: 2px solid rgba(17, 131, 136);
   border-radius: 15px;
   padding: 40px;
   margin: 20px 0;
   background-color: rgba(17, 130, 136, 0.096);
+  width: 25%;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.diposite{
+  width: 75%;
 }
 .manu p {
   margin: 15px 0;
