@@ -20,16 +20,15 @@ import useMyBlog from "../hooks/useMyBlog";
 import MyBlog from "../MyBlog";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import CustomModal from "../CustomModal";
 
 const Profile = () => {
   useTitle("Profile");
+  const [axiosSecure] = useAxiosSecure();
   const { users } = useAllUser();
+  const { blogs, isLoading, refetch } = useMyBlog();
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [axiosSecure] = useAxiosSecure();
 
-  const { blogs, isLoading, refetch } = useMyBlog();
 
   const handleOpen = (data) => {
     setIsOpen(true);
@@ -65,7 +64,7 @@ const Profile = () => {
   const modalDeletePost = (blog) => {
    mutation.mutate(blog);
   };
-  
+
   return (
     <>
       <SideNav>
