@@ -4,30 +4,68 @@ import useAllUser from "../hooks/useAllUser";
 import "./Css/Profile.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faEnvelope, faFemale, faGroupArrowsRotate, faLocation, faMale, faPhone, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faEnvelope,
+  faFemale,
+  faGroupArrowsRotate,
+  faLocation,
+  faMale,
+  faPhone,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal";
 import { useState } from "react";
 import useMyBlog from "../hooks/useMyBlog";
 import MyBlog from "../MyBlog";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import CustomModal from "../CustomModal";
 
 const Profile = () => {
   useTitle("Profile");
   const { users } = useAllUser();
   const [isOpen, setIsOpen] = useState(false);
-  const [modalData, setModalData] = useState(null)
+  const [modalData, setModalData] = useState(null);
+  const [axiosSecure] = useAxiosSecure();
 
-  const { blogs, isLoading } = useMyBlog()
+  const { blogs, isLoading, refetch } = useMyBlog();
 
   const handleOpen = (data) => {
-    setIsOpen(true)
-    setModalData(data)
-  }
+    setIsOpen(true);
+    setModalData(data);
+  };
 
   const handleClose = () => {
-    setIsOpen(false)
-    setModalData(null)
-  }
+    setIsOpen(false);
+    setModalData(null);
+  };
 
+  const mutation = useMutation(
+    async (blog) => {
+      const res = await axiosSecure.delete(`/remove-blog/${blog._id}`);
+      return res.data;
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data)
+        if (data.deletedCount > 0) {
+          console.log(data)
+          refetch();
+        }
+      },
+    },
+    {
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
+
+  const modalDeletePost = (blog) => {
+   mutation.mutate(blog);
+  };
+  
   return (
     <>
       <SideNav>
@@ -66,26 +104,54 @@ const Profile = () => {
           <div className="grid gap-5 grid-cols-1 md:grid-cols-5 h-full mt-7">
             <div className="md:col-span-2 font-semibold h-[100vh] sticky top-[200px] bg-gray-800 text-white p-5 rounded-xl">
               <div className="space-y-2">
-                <Link to='/dashboard/profile-setting'><h1 className="text-center bg-gray-700 py-3 rounded-xl hover:bg-gray-600 mb-3">Edit Details</h1></Link>
+                <Link to="/dashboard/profile-setting">
+                  <h1 className="text-center bg-gray-700 py-3 rounded-xl hover:bg-gray-600 mb-3">
+                    Edit Details
+                  </h1>
+                </Link>
                 <p>
-                  <span className="font-normal"><FontAwesomeIcon className="mr-2" icon={faPhone} /> Phone :</span> {users.phone}
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faPhone} /> Phone :
+                  </span>{" "}
+                  {users.phone}
                 </p>
                 <p>
-                  <span className="font-normal"><FontAwesomeIcon className="mr-2" icon={faEnvelope} /> E-mail : </span> {users.email}
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faEnvelope} />{" "}
+                    E-mail :{" "}
+                  </span>{" "}
+                  {users.email}
                 </p>
                 <p>
-                  <span className="font-normal"><FontAwesomeIcon className="mr-2" icon={faLocation} /> Address :</span> {users.address}
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faLocation} />{" "}
+                    Address :
+                  </span>{" "}
+                  {users.address}
                 </p>
                 <p>
-                  <span className="font-normal"><FontAwesomeIcon className="mr-2" icon={faGroupArrowsRotate} /> Blood Group : </span>{" "}
+                  <span className="font-normal">
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faGroupArrowsRotate}
+                    />{" "}
+                    Blood Group :{" "}
+                  </span>{" "}
                   {users.blood}
                 </p>
                 <p>
-                  <span className="font-normal"><FontAwesomeIcon className="mr-2" icon={users.gender == 'Male' ? faMale : faFemale} /> Gender : </span> {users.gender}
+                  <span className="font-normal">
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={users.gender == "Male" ? faMale : faFemale}
+                    />{" "}
+                    Gender :{" "}
+                  </span>{" "}
+                  {users.gender}
                 </p>
               </div>
-              {
-                blogs.length > 0 ? <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-4 rounded-xl">
+              {blogs.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-4 rounded-xl">
                   {blogs.map((blog) => (
                     <div key={blog._id} className="avatar">
                       <div className="w-24 rounded-xl">
@@ -93,20 +159,35 @@ const Profile = () => {
                       </div>
                     </div>
                   ))}
-                </div> : <h1 className="mt-5 text-xl text-gray-400">No Photos</h1>
-              }
+                </div>
+              ) : (
+                <h1 className="mt-5 text-xl text-gray-400">No Photos</h1>
+              )}
             </div>
             <div className="md:col-span-3">
-              {
-                blogs.length > 0 ? <>{
-                  !isLoading ? blogs.map((blog) => <MyBlog
-                    key={blog._id}
-                    blog={blog}
-                  ></MyBlog>) : <h1 className="text-blue-500">Loading...</h1>
-                }</> : <div className="flex items-center justify-center h-1/3">
-                  <h1 className="text-xl font-bold text-gray-400 text-center">Content Not Found</h1>
+              {blogs.length > 0 ? (
+                <>
+                  {!isLoading ? (
+                    blogs.map((blog) => (
+                      <>
+                        <MyBlog
+                          key={blog._id}
+                          blog={blog}
+                          modalDeletePost={modalDeletePost}
+                        ></MyBlog>
+                      </>
+                    ))
+                  ) : (
+                    <h1 className="text-blue-500">Loading...</h1>
+                  )}
+                </>
+              ) : (
+                <div className="flex items-center justify-center h-1/3">
+                  <h1 className="text-xl font-bold text-gray-400 text-center">
+                    Content Not Found
+                  </h1>
                 </div>
-              }
+              )}
             </div>
           </div>
         </div>
