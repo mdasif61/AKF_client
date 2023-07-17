@@ -154,7 +154,7 @@ const Profile = () => {
                   {blogs.map((blog) => (
                     <div key={blog._id} className="avatar">
                       <div className="w-24 rounded-xl">
-                        <img src={blog.photo} />
+                        <img src={blog.photo[0]} />
                       </div>
                     </div>
                   ))}

@@ -30,6 +30,7 @@ const Modal = ({ handleClose, data }) => {
         if (data.insertedId) {
           closeRef.current.close();
           refetch();
+          setLoading(false)
         }
         setLoading(false);
       },
@@ -43,31 +44,16 @@ const Modal = ({ handleClose, data }) => {
   );
 
   const onSubmit = (data) => {
-    const imageHostinUrl = `https://api.imgbb.com/1/upload?key=${postImage}`;
-    const formData = new FormData();
-    formData.append("image", data.photo[0]);
-    setLoading(true);
-
-    fetch(imageHostinUrl, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((imageData) => {
-        if (imageData.success) {
-          const imageUrl = imageData.data.display_url;
-          const { status } = data;
-          const blogData = {
-            text: status,
-            photo: imageUrl,
-            like: 0,
-            status: "Pending",
-            email: user.email,
-          };
-          mutation.mutate(blogData);
-          setLoading(false);
-        }
-      });
+    setImage(true)
+    const { status } = data;
+    const blogData = {
+      text: status,
+      photo: image,
+      like: 0,
+      status: "Pending",
+      email: user.email,
+    };
+    mutation.mutate(blogData);
   };
 
   const handleClick = () => {
@@ -156,7 +142,7 @@ const Modal = ({ handleClose, data }) => {
 
               <div onClick={handleClick} className="border-green-200 relative text-green-600 border my-5 flex cursor-pointer items-center h-56 justify-center bg-gray-100 p-2 overflow-y-scroll rounded-lg">
 
-                <div className={`grid grid-cols-1 ${image.length>1&&image.length<=2?'grid-cols-2':image.length>=3&&image.length<5&&'grid-cols-2'} ${image.length>4&&'grid-cols-3'} gap-2 w-full object-cover h-full object-center`}>
+                <div className={`grid grid-cols-1 ${image.length > 1 && image.length <= 2 ? 'grid-cols-2' : image.length >= 3 && image.length < 5 && 'grid-cols-2'} ${image.length > 4 && 'grid-cols-3'} gap-2 w-full object-cover h-full object-center`}>
                   {
                     image.length > 0 ? image.map((img, index) => (
                       <div key={index} className="w-full object-cover object-center h-auto overflow-hidden rounded-md">

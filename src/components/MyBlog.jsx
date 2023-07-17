@@ -28,9 +28,8 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         <div className="relative">
           <FontAwesomeIcon
             onClick={() => setOpen(!open)}
-            className={`cursor-pointer ${
-              open && "bg-gray-200"
-            } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
+            className={`cursor-pointer ${open && "bg-gray-200"
+              } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
             icon={faEllipsis}
           />
 
@@ -53,8 +52,12 @@ const MyBlog = ({ blog, modalDeletePost }) => {
       </div>
 
       <p className="font-semibold">{blog.text}</p>
-      <div className="h-56 overflow-hidden rounded-xl mt-4">
-        <img className="w-full" src={blog.photo} alt="" />
+      <div className="h-56 overflow-hidden grid grid-cols-3 rounded-xl mt-4">
+        {
+          blog?.photo.map((img, index) => (
+            <img key={index} className="w-full" src={img} alt="" />
+          ))
+        }
       </div>
       {deleteCon && (
         <CustomModal
