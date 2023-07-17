@@ -12,7 +12,7 @@ const postImage = import.meta.env.VITE_IMAGE_UPLOAD_KEY;
 
 const Modal = ({ handleClose, data }) => {
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState(null)
+  const [image, setImage] = useState([])
   const [axiosSecure] = useAxiosSecure();
   const closeRef = useRef(null);
   const { user } = useContext(mainContext);
@@ -80,7 +80,10 @@ const Modal = ({ handleClose, data }) => {
 
     const imageHostinUrl = `https://api.imgbb.com/1/upload?key=${postImage}`;
     const formData = new FormData();
-    formData.append("image", event.target.files[0]);
+
+    for (let i = 0; i < event.target.files.length; i++) {
+      formData.append("image", event.target.files[i]);
+    }
     // setLoading(true);
 
     fetch(imageHostinUrl, {
@@ -91,7 +94,7 @@ const Modal = ({ handleClose, data }) => {
       .then((imageData) => {
         if (imageData.success) {
           const imageUrl = imageData.data.display_url;
-          setImage(imageUrl)
+          setImage(prevImg => [imageUrl, ...prevImg])
           // setLoading(false);
         }
       });
@@ -151,13 +154,19 @@ const Modal = ({ handleClose, data }) => {
                 ></textarea>
               </div>
 
-              <div onClick={handleClick} className="border-green-200 relative text-green-600 border my-5 flex cursor-pointer items-center h-56 justify-center bg-gray-100 overflow-hidden rounded-lg">
+              <div onClick={handleClick} className="border-green-200 relative text-green-600 border my-5 flex cursor-pointer items-center h-56 justify-center bg-gray-100 p-2 overflow-y-scroll rounded-lg">
 
-                <div className="w-full h-full object-cover object-center overflow-hidden rounded-lg">
-                  <img className="w-full" src={image} alt="" />
+                <div className={`grid grid-cols-1 ${image.length>1&&image.length<=2?'grid-cols-2':image.length===3&&'grid-cols-2'} ${image.length>=4&&'grid-cols-3'} gap-2 w-full object-cover h-full object-center`}>
+                  {
+                    image.length > 0 ? image.map((img, index) => (
+                      <div key={index} className="w-full object-cover object-center h-auto overflow-hidden rounded-md">
+                        <img className="w-full rounded-md" src={img} alt="" />
+                      </div>
+                    )) : ''
+                  }
                 </div>
 
-                <div className={`absolute flex items-center justify-center ${image&&'bg-zinc-800 hover:bg-opacity-100 bg-opacity-90 px-4 py-1 top-5 right-5 rounded-full'}`}>
+                <div className={`absolute flex items-center justify-center ${image && 'bg-zinc-800 hover:bg-opacity-100 bg-opacity-90 px-4 py-1 top-5 right-5 rounded-full'}`}>
                   <FontAwesomeIcon
                     className="text-xl mr-2 cursor-pointer text-green-500 py-2"
                     icon={faImage}
