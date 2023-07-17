@@ -52,6 +52,8 @@ const Modal = ({ handleClose, data }) => {
       like: 0,
       status: "Pending",
       email: user.email,
+      userPhoto:user.photoURL,
+      userName:user.displayName
     };
     mutation.mutate(blogData);
   };

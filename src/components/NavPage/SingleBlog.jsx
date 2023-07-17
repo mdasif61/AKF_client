@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useAllUser from "./hooks/useAllUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
@@ -9,37 +8,30 @@ import {
   faThumbsUp,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import CustomModal from "./CustomModal";
-import like from "../../public/Icon/like.svg";
-import love from "../../public/Icon/love.svg";
-import care from "../../public//Icon/care.svg";
-import haha from "../../public//Icon/haha.svg";
-import sad from "../../public/Icon/sad.svg";
-import wow from "../../public/Icon/wow.svg";
-import angry from "../../public/Icon/angry.svg";
+import like from "../../../public/Icon/like.svg";
+import love from "../../../public/Icon/love.svg";
+import care from "../../../public//Icon/care.svg";
+import haha from "../../../public//Icon/haha.svg";
+import sad from "../../../public/Icon/sad.svg";
+import wow from "../../../public/Icon/wow.svg";
+import angry from "../../../public/Icon/angry.svg";
 
-const MyBlog = ({ blog, modalDeletePost }) => {
-  const { users } = useAllUser();
+const SingleBlog = ({ blog }) => {
   const [open, setOpen] = useState(false);
-  const [deleteCon, setDeleteCon] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
-
-  const confirmData = {
-    header: "Are You Sure?",
-    title: "Do you want to delete this post!",
-  };
+  const [deleteCon, setDeleteCon] = useState(false);
 
   return (
-    <div className="w-full border mb-5">
+    <div className="w-full border bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
         <div className="flex items-center mb-4">
           <div className="avatar">
             <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src={users?.image} alt="" />
+              <img src={blog?.userPhoto} alt="" />
             </div>
           </div>
           <div className="flex-1 ml-4">
-            <h3 className="font-bold">{users?.name}</h3>
+            <h3 className="font-bold">{blog?.userName}</h3>
           </div>
           <div className="relative">
             <FontAwesomeIcon
@@ -80,7 +72,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
               : ""
           } grid grid-cols-1 rounded-xl mt-4`}
         >
-          {blog?.photo.map((img, index) => (
+          {blog.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
               <img
                 className="w-full object-cover object-center"
@@ -91,22 +83,14 @@ const MyBlog = ({ blog, modalDeletePost }) => {
           ))}
         </div>
       </div>
-      {deleteCon && (
-        <CustomModal
-          blog={blog}
-          modalDeletePost={modalDeletePost}
-          setDeleteCon={setDeleteCon}
-          data={confirmData}
-        />
-      )}
 
       <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
             onMouseOver={() => setLikeBox(true)}
-            onMouseOut={()=>{
+            onMouseOut={() => {
               setTimeout(() => {
-                setLikeBox(false)
+                setLikeBox(false);
               }, 3000);
             }}
             className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
@@ -173,4 +157,4 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   );
 };
 
-export default MyBlog;
+export default SingleBlog;

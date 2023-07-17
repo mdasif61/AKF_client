@@ -29,7 +29,6 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
 
-
   const handleOpen = (data) => {
     setIsOpen(true);
     setModalData(data);
@@ -47,9 +46,9 @@ const Profile = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data)
+        console.log(data);
         if (data.deletedCount > 0) {
-          console.log(data)
+          console.log(data);
           refetch();
         }
       },
@@ -62,7 +61,7 @@ const Profile = () => {
   );
 
   const modalDeletePost = (blog) => {
-   mutation.mutate(blog);
+    mutation.mutate(blog);
   };
 
   return (
@@ -151,13 +150,15 @@ const Profile = () => {
               </div>
               {blogs.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-4 rounded-xl">
-                  {blogs.map((blog) => (
-                    <div key={blog._id} className="avatar">
-                      <div className="w-24 rounded-xl">
-                        <img src={blog.photo[0]} />
+                  {blogs.map((blog) =>
+                    blog.photo.map((img,index) => (
+                      <div key={index} className="avatar">
+                        <div className="w-24 rounded-xl">
+                          <img src={img} />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               ) : (
                 <h1 className="mt-5 text-xl text-gray-400">No Photos</h1>

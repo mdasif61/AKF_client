@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-color">
+    <div className="bg-color z-50">
       <Container>
         <div className="relative z-50 h-[70px] flex justify-between items-center">
           <img className="h-[60%] ml-4" src={navlogo} alt="" />
