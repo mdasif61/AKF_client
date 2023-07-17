@@ -6,11 +6,13 @@ import { useForm } from "react-hook-form";
 import useAxiosSecure from "./hooks/useAxiosSecure";
 import { mainContext } from "./NavPage/AuthProvider";
 import useMyBlog from "./hooks/useMyBlog";
+import '../components/Layout/Css/Modal.css'
 
 const postImage = import.meta.env.VITE_IMAGE_UPLOAD_KEY;
 
 const Modal = ({ handleClose, data }) => {
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null)
   const [axiosSecure] = useAxiosSecure();
   const closeRef = useRef(null);
   const { user } = useContext(mainContext);
@@ -42,7 +44,6 @@ const Modal = ({ handleClose, data }) => {
 
   const onSubmit = (data) => {
     const imageHostinUrl = `https://api.imgbb.com/1/upload?key=${postImage}`;
-
     const formData = new FormData();
     formData.append("image", data.photo[0]);
     setLoading(true);
@@ -73,8 +74,28 @@ const Modal = ({ handleClose, data }) => {
     fileInputRef.current.click();
   };
 
+
   const handleChange = (event) => {
     setValue("photo", event.target.files);
+
+    const imageHostinUrl = `https://api.imgbb.com/1/upload?key=${postImage}`;
+    const formData = new FormData();
+    formData.append("image", event.target.files[0]);
+    // setLoading(true);
+
+    fetch(imageHostinUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((imageData) => {
+        if (imageData.success) {
+          const imageUrl = imageData.data.display_url;
+          setImage(imageUrl)
+          // setLoading(false);
+        }
+      });
+
   };
 
   const handleFileButton = (event) => {
@@ -124,28 +145,33 @@ const Modal = ({ handleClose, data }) => {
               <div className="my-5">
                 <textarea
                   {...register("status")}
-                  className="w-full resize-none border-none outline-none"
+                  className="w-full h-auto postText resize-none border-none outline-none"
                   placeholder="Write your blog"
                   id=""
-                  rows="5"
                 ></textarea>
               </div>
 
-              <div className="border-green-200 text-green-600 border my-5 flex items-center px-4 rounded-lg">
-                <FontAwesomeIcon
-                  onClick={handleClick}
-                  className="text-xl mr-2 cursor-pointer text-green-500 py-2"
-                  icon={faImage}
-                />{" "}
-                Add Photo
-                <input
-                  {...register("photo")}
-                  className="hidden"
-                  onChange={handleChange}
-                  ref={fileInputRef}
-                  type="file"
-                  id=""
-                />
+              <div onClick={handleClick} className="border-green-200 relative text-green-600 border my-5 flex cursor-pointer items-center h-56 justify-center bg-gray-100 overflow-hidden rounded-lg">
+
+                <div className="w-full h-full object-cover object-center overflow-hidden rounded-lg">
+                  <img className="w-full" src={image} alt="" />
+                </div>
+
+                <div className={`absolute flex items-center justify-center ${image&&'bg-zinc-800 hover:bg-opacity-100 bg-opacity-90 px-4 py-1 top-5 right-5 rounded-full'}`}>
+                  <FontAwesomeIcon
+                    className="text-xl mr-2 cursor-pointer text-green-500 py-2"
+                    icon={faImage}
+                  />{" "}
+                  Add Photo
+                  <input
+                    {...register("photo")}
+                    className="hidden"
+                    onChange={handleChange}
+                    ref={fileInputRef}
+                    type="file"
+                    id=""
+                  />
+                </div>
               </div>
 
               <button type="submit" className="btn btn-block bg-black">

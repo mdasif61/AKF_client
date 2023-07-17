@@ -1,0 +1,20 @@
+.postText{
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.postText::-webkit-scrollbar{
+    scrollbar-width: 5px;
+}
+
+.postText::-webkit-scrollbar-track{
+    background-color: black;
+    border-radius: 10px;
+}
+
+.postText::-webkit-scrollbar-thumb {
+    background-color: rgba(17, 131, 136);
+    border-radius: 10px;
+  }
+.postText::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(9, 94, 99);
+  }
