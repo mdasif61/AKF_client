@@ -29,8 +29,8 @@ const Header = () => {
           <nav className="flex items-center">
             <NavLink to="/">Home</NavLink>
             {user && <NavLink to="/dashboard/diposite">Dashboard</NavLink>}
-            <NavLink to="/about">About</NavLink>
             <NavLink to="/blog">Blog</NavLink>
+            <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
             {user ? (
               <NavLink to="/">

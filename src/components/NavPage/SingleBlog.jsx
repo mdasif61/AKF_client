@@ -15,17 +15,23 @@ import haha from "../../../public//Icon/haha.svg";
 import sad from "../../../public/Icon/sad.svg";
 import wow from "../../../public/Icon/wow.svg";
 import angry from "../../../public/Icon/angry.svg";
+import useProfile from "../hooks/useProfile";
 
 const SingleBlog = ({ blog }) => {
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
+  const {profile}=useProfile()
+
+  const handleShowProfile=()=>{
+    console.log(profile)
+  }
 
   return (
     <div className="w-full border bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
         <div className="flex items-center mb-4">
-          <div className="avatar">
+          <div onMouseOver={()=>handleShowProfile(blog.userId)} className="avatar">
             <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               <img src={blog?.userPhoto} alt="" />
             </div>

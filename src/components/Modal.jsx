@@ -10,7 +10,7 @@ import '../components/Layout/Css/Modal.css'
 
 const postImage = import.meta.env.VITE_IMAGE_UPLOAD_KEY;
 
-const Modal = ({ handleClose, data }) => {
+const Modal = ({ handleClose, data:userInfo }) => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState([])
   const [axiosSecure] = useAxiosSecure();
@@ -53,7 +53,8 @@ const Modal = ({ handleClose, data }) => {
       status: "Pending",
       email: user.email,
       userPhoto:user.photoURL,
-      userName:user.displayName
+      userName:user.displayName,
+      userId:userInfo._id
     };
     mutation.mutate(blogData);
   };
@@ -124,11 +125,11 @@ const Modal = ({ handleClose, data }) => {
             <div className="flex items-center">
               <div className="avatar">
                 <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <img src={data?.image} alt="" />
+                  <img src={userInfo?.image} alt="" />
                 </div>
               </div>
               <div className="flex-1 ml-4">
-                <h3>{data?.name}</h3>
+                <h3>{userInfo?.name}</h3>
               </div>
             </div>
 

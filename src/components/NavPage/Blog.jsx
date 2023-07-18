@@ -11,11 +11,11 @@ const Blog = () => {
   return (
     <div>
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-3">
-          <div>
+        <div className="flex gap-5">
+          <div className="sticky top-0 h-screen w-[30%]">
             <h1>Left Content</h1>
           </div>
-          <div>
+          <div className="w-[40%]">
             {allBlog.map((blog) => (
               <SingleBlog
               key={blog._id}
@@ -23,7 +23,7 @@ const Blog = () => {
               ></SingleBlog>
             ))}
           </div>
-          <div>
+          <div className="sticky w-[30%] top-0 h-screen">
             <h1>Left Content</h1>
           </div>
         </div>
