@@ -1,22 +1,23 @@
-import { useContext } from "react";
 import useAxiosSecure from "./useAxiosSecure";
-import { mainContext } from "../NavPage/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 
-const useProfile = () => {
 
-    const {axiosSecure}=useAxiosSecure();
-    const {user}=useContext(mainContext)
-    console.log(user)
+const useProfile = (id) => {
+    const [axiosSecure] = useAxiosSecure();
 
-    const { data: profile = {} } = useQuery({
-        queryKey: ['user-profile', user?.email],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/user-profile/${user?.email}`);
-            return res.data
+    const { data: profile = {} } = useQuery(
+        ['profile', id],
+        async () => {
+            try {
+                const res = await axiosSecure.get(`/user-profile?id=${id}`);
+                return res.data;
+            } catch (error) {
+                console.log(error);
+                throw error;
+            }
         }
-    })
-    return {profile}
+    )
+    return { profile }
 };
 
 export default useProfile;

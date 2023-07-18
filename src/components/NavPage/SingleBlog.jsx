@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
   faEdit,
   faEllipsis,
+  faEnvelope,
+  faFemale,
+  faGroupArrowsRotate,
+  faLocation,
+  faMale,
+  faPhone,
   faShare,
   faThumbsUp,
   faTrash,
@@ -21,17 +27,15 @@ const SingleBlog = ({ blog }) => {
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
-  const {profile}=useProfile()
-
-  const handleShowProfile=()=>{
-    console.log(profile)
-  }
+  const { profile } = useProfile(blog.userId);
+  console.log(profile)
+  const [profileShow, setProfileShow] = useState(false)
 
   return (
     <div className="w-full border bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
-        <div className="flex items-center mb-4">
-          <div onMouseOver={()=>handleShowProfile(blog.userId)} className="avatar">
+        <div className="flex items-center mb-4 relative">
+          <div onMouseOver={() => setProfileShow(true)} onMouseOut={() => setProfileShow(false)} className="avatar">
             <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               <img src={blog?.userPhoto} alt="" />
             </div>
@@ -42,9 +46,8 @@ const SingleBlog = ({ blog }) => {
           <div className="relative">
             <FontAwesomeIcon
               onClick={() => setOpen(!open)}
-              className={`cursor-pointer ${
-                open && "bg-gray-200"
-              } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
+              className={`cursor-pointer ${open && "bg-gray-200"
+                } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
               icon={faEllipsis}
             />
 
@@ -64,19 +67,71 @@ const SingleBlog = ({ blog }) => {
               </div>
             )}
           </div>
+          {/* profile start */}
+          {
+            profileShow &&
+            <div onMouseOver={() => setProfileShow(true)} onMouseOut={() => setProfileShow(false)} className="bg-gray-100 shadow-md left-1/2 bottom-1/2 flex items-center justify-center z-40 rounded-xl p-5 absolute">
+              <div className="avatar mr-4">
+                <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  <img src={profile.image} alt="" />
+                </div>
+              </div>
+              <div>
+                <p>
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faPhone} /> Phone :
+                  </span>{" "}
+                  {profile.phone}
+                </p>
+                <p>
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faEnvelope} />{" "}
+                    E-mail :{" "}
+                  </span>{" "}
+                  {profile.email}
+                </p>
+                <p>
+                  <span className="font-normal">
+                    <FontAwesomeIcon className="mr-2" icon={faLocation} />{" "}
+                    Address :
+                  </span>{" "}
+                  {profile.address}
+                </p>
+                <p>
+                  <span className="font-normal">
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faGroupArrowsRotate}
+                    />{" "}
+                    Blood Group :{" "}
+                  </span>{" "}
+                  {profile.blood}
+                </p>
+                <p>
+                  <span className="font-normal">
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={profile.gender == "Male" ? faMale : faFemale}
+                    />{" "}
+                    Gender :{" "}
+                  </span>{" "}
+                  {profile.gender}
+                </p>
+              </div>
+            </div>
+          }
+          {/* profile end */}
         </div>
 
         <p className="font-semibold">{blog.text}</p>
         <div
-          className={`overflow-hidden avatar ${
-            blog.photo.length && "h-56"
-          } object-cover ${
-            blog.photo.length > 2 && blog.photo.length <= 4
+          className={`overflow-hidden avatar ${blog.photo.length && "h-56"
+            } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
               ? "grid-cols-2"
               : blog.photo.length > 4
-              ? "grid-cols-3"
-              : ""
-          } grid grid-cols-1 rounded-xl mt-4`}
+                ? "grid-cols-3"
+                : ""
+            } grid grid-cols-1 rounded-xl mt-4`}
         >
           {blog.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
