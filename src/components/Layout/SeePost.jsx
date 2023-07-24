@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
@@ -21,33 +21,46 @@ import haha from "../../../public//Icon/haha.svg";
 import sad from "../../../public/Icon/sad.svg";
 import wow from "../../../public/Icon/wow.svg";
 import angry from "../../../public/Icon/angry.svg";
-import useProfile from "../hooks/useProfile";
+import CustomModal from "../CustomModal";
+import useSeeProfile from "../hooks/useSeeProfile";
 import { Link } from "react-router-dom";
+import useProfile from "../hooks/useProfile";
 
-const SingleBlog = ({ blog }) => {
+const SeePost = ({ post }) => {
   const [open, setOpen] = useState(false);
-  const [likeBox, setLikeBox] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
-  const { profile } = useProfile(blog.userId);
+  const [likeBox, setLikeBox] = useState(false);
+  const { member } = useSeeProfile(post?.userId);
   const [profileShow, setProfileShow] = useState(false);
+  const { profile } = useProfile(post?.userId);
+  const [scroll, setScroll] = useState(false);
+
+  const confirmData = {
+    header: "Are You Sure?",
+    title: "Do you want to delete this post!",
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [scroll]);
 
   return (
     <div className="w-full border bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
         <div className="flex items-center mb-4 relative">
-          <Link to={`/blog/see-profile/${blog.userId}`}>
+          <Link to={`/blog/see-profile/${member?.image.userId}`}>
             <div
               onMouseOver={() => setProfileShow(true)}
               onMouseOut={() => setProfileShow(false)}
               className="avatar hover:cursor-pointer"
             >
               <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img src={blog?.userPhoto} alt="" />
+                <img src={member?.image?.userPhoto} alt="" />
               </div>
             </div>
           </Link>
           <div className="flex-1 ml-4">
-            <h3 className="font-bold">{blog?.userName}</h3>
+            <h3 className="font-bold">{member?.image?.userName}</h3>
           </div>
           <div className="relative">
             <FontAwesomeIcon
@@ -81,10 +94,10 @@ const SingleBlog = ({ blog }) => {
               onMouseOut={() => setProfileShow(false)}
               className="p-5 bg-gray-100 shadow-md -left-1/2 top-10 flex items-center justify-center backdrop-blur-lg bg-opacity-70 z-40 rounded-xl absolute"
             >
-              <Link to={`/blog/see-profile/${blog.userId}`}>
+              <Link to={`/blog/see-profile/${member?.image.userId}`}>
                 <div className="avatar mr-4 p-5">
                   <div className="w-20 rounded-full">
-                    <img src={profile.image} alt="" />
+                    <img src={member?.image?.userPhoto} alt="" />
                   </div>
                 </div>
               </Link>
@@ -129,30 +142,28 @@ const SingleBlog = ({ blog }) => {
                   </span>{" "}
                   {profile.gender}
                 </p>
-                <Link to={`/blog/see-profile/${blog.userId}`}>
-                  <button className="btn btn-block bg-blue-600 border-none hover:bg-blue-500 mt-4">
-                    See Profile
-                  </button>
-                </Link>
+                <button onClick={()=>setScroll(!scroll)} className="btn btn-block bg-blue-600 border-none hover:bg-blue-500 mt-4">
+                  See Profile
+                </button>
               </div>
             </div>
           )}
           {/* profile end */}
         </div>
 
-        <p className="font-semibold">{blog.text}</p>
+        <p className="font-semibold">{post.text}</p>
         <div
           className={`overflow-hidden avatar ${
-            blog.photo.length && "h-56"
+            post.photo.length && "h-56"
           } object-cover ${
-            blog.photo.length > 2 && blog.photo.length <= 4
+            post.photo.length > 2 && post.photo.length <= 4
               ? "grid-cols-2"
-              : blog.photo.length > 4
+              : post.photo.length > 4
               ? "grid-cols-3"
               : ""
           } grid grid-cols-1 rounded-xl mt-4`}
         >
-          {blog.photo.map((img, index) => (
+          {post.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
               <img
                 className="w-full object-cover object-center"
@@ -237,4 +248,4 @@ const SingleBlog = ({ blog }) => {
   );
 };
 
-export default SingleBlog;
+export default SeePost;

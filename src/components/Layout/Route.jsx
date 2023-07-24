@@ -14,6 +14,7 @@ import PrivateRoute from "./PrivateRoute";
 import SinglePost from "./SinglePost";
 import ProfileSetting from "./ProfileSetting";
 import Security from "./Security";
+import SeeProfile from "./SeeProfile";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
         path: "/blog/:id",
         element: <SinglePost></SinglePost>,
       },
+      {
+        path:'/blog/see-profile/:id',
+        element:<SeeProfile></SeeProfile>
+      }
     ],
   },
 
