@@ -15,16 +15,16 @@ const SeeProfile = () => {
   }
 
   return (
-    <div className="grid grid-cols-3">
-      <div>
+    <div className="flex gap-5">
+      <div className="w-[30%]">
         <h1>Left content</h1>
       </div>
-      <div>
+      <div className="w-[40%]">
         {member.result.map((post) => (
           <SeePost key={post._id} post={post}></SeePost>
         ))}
       </div>
-      <div>
+      <div className="w-[30%]">
         <h1>Right content</h1>
       </div>
     </div>

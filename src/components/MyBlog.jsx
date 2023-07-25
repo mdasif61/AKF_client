@@ -17,6 +17,7 @@ import haha from "../../public//Icon/haha.svg";
 import sad from "../../public/Icon/sad.svg";
 import wow from "../../public/Icon/wow.svg";
 import angry from "../../public/Icon/angry.svg";
+import moment from "moment";
 
 const MyBlog = ({ blog, modalDeletePost }) => {
   const { users } = useAllUser();
@@ -40,6 +41,11 @@ const MyBlog = ({ blog, modalDeletePost }) => {
           </div>
           <div className="flex-1 ml-4">
             <h3 className="font-bold">{users?.name}</h3>
+            <h3>
+              <small>{moment().utc(blog.date).format("DD-MM-YYYY")}</small>
+              <br />
+              {/* <small>{moment(postDate).fromNow()}</small> TODO */}
+            </h3>
           </div>
           <div className="relative">
             <FontAwesomeIcon

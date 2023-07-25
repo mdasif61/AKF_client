@@ -23,6 +23,7 @@ import wow from "../../../public/Icon/wow.svg";
 import angry from "../../../public/Icon/angry.svg";
 import useProfile from "../hooks/useProfile";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const SingleBlog = ({ blog }) => {
   const [open, setOpen] = useState(false);
@@ -30,6 +31,20 @@ const SingleBlog = ({ blog }) => {
   const [deleteCon, setDeleteCon] = useState(false);
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
+  const [reaction, setReaction] = useState('');
+
+  const getReactionLogo=()=>{
+    switch(reaction){
+      case 'like':return <img src={like} alt="like" />;
+      case 'love':return <img src={love} alt="love" />;
+      case 'care':return <img src={care} alt="care" />;
+      case 'haha':return <img src={haha} alt="haha" />;
+      case 'sad':return <img src={sad} alt="sad" />;
+      case 'wow':return <img src={wow} alt="wow" />;
+      case 'angry':return <img src={angry} alt="angry" />;
+      default:return null;
+    }
+  }
 
   return (
     <div className="w-full border bg-white rounded-lg mb-5">
@@ -48,6 +63,11 @@ const SingleBlog = ({ blog }) => {
           </Link>
           <div className="flex-1 ml-4">
             <h3 className="font-bold">{blog?.userName}</h3>
+            <h3>
+              <small>{moment().utc(blog.date).format("DD-MM-YYYY")}</small>
+              <br />
+              {/* <small>{moment(postDate).fromNow()}</small> TODO */}
+            </h3>
           </div>
           <div className="relative">
             <FontAwesomeIcon
@@ -167,6 +187,7 @@ const SingleBlog = ({ blog }) => {
       <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
+            // onClick={()=>setReaction('like')}
             onMouseOver={() => setLikeBox(true)}
             onMouseOut={() => {
               setTimeout(() => {
@@ -175,7 +196,15 @@ const SingleBlog = ({ blog }) => {
             }}
             className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
           >
-            <FontAwesomeIcon icon={faThumbsUp} />{" "}
+            {reaction ? (
+              <div onClick={()=>setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
+                <span>
+                  {getReactionLogo()}
+                </span>
+              </div>
+            ) : (
+              <FontAwesomeIcon icon={faThumbsUp} />
+            )}
             <span className="ml-1">Like</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
@@ -194,37 +223,37 @@ const SingleBlog = ({ blog }) => {
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
-              <div className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('like')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={like} alt="" />
                 </span>
               </div>
-              <div className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('love')} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={love} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('care')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={care} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('haha')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={haha} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('wow')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={wow} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('sad')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={sad} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>setReaction('angry')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={angry} alt="" />
                 </span>

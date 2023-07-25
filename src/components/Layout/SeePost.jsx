@@ -25,6 +25,7 @@ import CustomModal from "../CustomModal";
 import useSeeProfile from "../hooks/useSeeProfile";
 import { Link } from "react-router-dom";
 import useProfile from "../hooks/useProfile";
+import moment from "moment";
 
 const SeePost = ({ post }) => {
   const [open, setOpen] = useState(false);
@@ -34,6 +35,8 @@ const SeePost = ({ post }) => {
   const [profileShow, setProfileShow] = useState(false);
   const { profile } = useProfile(post?.userId);
   const [scroll, setScroll] = useState(false);
+
+  const postDate = moment().utc(post.date).toDate().getDate();
 
   const confirmData = {
     header: "Are You Sure?",
@@ -61,6 +64,11 @@ const SeePost = ({ post }) => {
           </Link>
           <div className="flex-1 ml-4">
             <h3 className="font-bold">{member?.image?.userName}</h3>
+            <h3>
+              <small>{moment().utc(post.date).format("DD-MM-YYYY")}</small>
+              <br />
+              {/* <small>{moment(postDate).fromNow()}</small> TODO */}
+            </h3>
           </div>
           <div className="relative">
             <FontAwesomeIcon
@@ -142,7 +150,10 @@ const SeePost = ({ post }) => {
                   </span>{" "}
                   {profile.gender}
                 </p>
-                <button onClick={()=>setScroll(!scroll)} className="btn btn-block bg-blue-600 border-none hover:bg-blue-500 mt-4">
+                <button
+                  onClick={() => setScroll(!scroll)}
+                  className="btn btn-block bg-blue-600 border-none hover:bg-blue-500 mt-4"
+                >
                   See Profile
                 </button>
               </div>

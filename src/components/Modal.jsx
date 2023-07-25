@@ -54,7 +54,8 @@ const Modal = ({ handleClose, data:userInfo }) => {
       email: user.email,
       userPhoto:user.photoURL,
       userName:user.displayName,
-      userId:userInfo._id
+      userId:userInfo._id,
+      date:Date.now()
     };
     mutation.mutate(blogData);
   };
