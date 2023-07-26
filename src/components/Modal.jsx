@@ -49,7 +49,7 @@ const Modal = ({ handleClose, data:userInfo }) => {
     const blogData = {
       text: status,
       photo: image,
-      like: 0,
+      reaction:{like:0,love:0,care:0,haha:0,sad:0,wow:0,angry:0},
       status: "Pending",
       email: user.email,
       userPhoto:user.photoURL,

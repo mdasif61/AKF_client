@@ -24,8 +24,13 @@ import angry from "../../../public/Icon/angry.svg";
 import useProfile from "../hooks/useProfile";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const SingleBlog = ({ blog }) => {
+
+  const [axiosSecure]=useAxiosSecure()
+
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
@@ -45,6 +50,25 @@ const SingleBlog = ({ blog }) => {
       default:return null;
     }
   }
+
+  const mutation=useMutation(
+    async(data)=>{
+      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}`,data).then(res=>res.data);
+    },
+    {
+      onSuccess:(data)=>{
+        if(data.result.modifiedCount>0){
+         return axiosSecure.patch(`/blog/prev-react/${blog._id}`, {name:data.reactName,post:blog})
+          .then(res=>console.log(res.data))
+        }
+      }
+    },
+    {
+      onError:(error)=>{
+        console.log(error)
+      }
+    }
+  )
 
   return (
     <div className="w-full border bg-white rounded-lg mb-5">
@@ -223,37 +247,58 @@ const SingleBlog = ({ blog }) => {
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
-              <div onClick={()=>setReaction('like')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('like'),
+                mutation.mutate(blog)
+              }} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={like} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('love')} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('love')
+                mutation.mutate(blog)
+              }} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={love} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('care')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('care'),
+                mutation.mutate(blog)
+              }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={care} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('haha')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('haha'),
+                mutation.mutate(blog)
+              }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={haha} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('wow')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('wow'),
+                mutation.mutate(blog)
+              }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={wow} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('sad')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('sad'),
+                mutation.mutate(blog)
+              }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={sad} alt="" />
                 </span>
               </div>
-              <div onClick={()=>setReaction('angry')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={()=>{
+                setReaction('angry'),
+                mutation.mutate(blog)
+              }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={angry} alt="" />
                 </span>
