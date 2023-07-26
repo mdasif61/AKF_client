@@ -30,6 +30,21 @@ const MyBlog = ({ blog, modalDeletePost }) => {
     title: "Do you want to delete this post!",
   };
 
+  const [reaction, setReaction] = useState('');
+
+  const getReactionLogo = () => {
+    switch (reaction) {
+      case 'like': return <img src={like} alt="like" />;
+      case 'love': return <img src={love} alt="love" />;
+      case 'care': return <img src={care} alt="care" />;
+      case 'haha': return <img src={haha} alt="haha" />;
+      case 'sad': return <img src={sad} alt="sad" />;
+      case 'wow': return <img src={wow} alt="wow" />;
+      case 'angry': return <img src={angry} alt="angry" />;
+      default: return null;
+    }
+  }
+
   return (
     <div className="w-full border mb-5">
       <div className="p-5 w-full">
@@ -50,9 +65,8 @@ const MyBlog = ({ blog, modalDeletePost }) => {
           <div className="relative">
             <FontAwesomeIcon
               onClick={() => setOpen(!open)}
-              className={`cursor-pointer ${
-                open && "bg-gray-200"
-              } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
+              className={`cursor-pointer ${open && "bg-gray-200"
+                } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
               icon={faEllipsis}
             />
 
@@ -76,15 +90,13 @@ const MyBlog = ({ blog, modalDeletePost }) => {
 
         <p className="font-semibold">{blog.text}</p>
         <div
-          className={`overflow-hidden avatar ${
-            blog.photo.length && "h-56"
-          } object-cover ${
-            blog.photo.length > 2 && blog.photo.length <= 4
+          className={`overflow-hidden avatar ${blog.photo.length && "h-56"
+            } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
               ? "grid-cols-2"
               : blog.photo.length > 4
-              ? "grid-cols-3"
-              : ""
-          } grid grid-cols-1 rounded-xl mt-4`}
+                ? "grid-cols-3"
+                : ""
+            } grid grid-cols-1 rounded-xl mt-4`}
         >
           {blog?.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
@@ -110,14 +122,18 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         <div className="w-full flex justify-between items-center">
           <div
             onMouseOver={() => setLikeBox(true)}
-            onMouseOut={()=>{
+            onMouseOut={() => {
               setTimeout(() => {
                 setLikeBox(false)
               }, 3000);
             }}
             className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
           >
-            <FontAwesomeIcon icon={faThumbsUp} />{" "}
+            {reaction ? <div onClick={() => setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
+              <span>
+                {getReactionLogo()}
+              </span>
+            </div> : <FontAwesomeIcon icon={faThumbsUp} />}
             <span className="ml-1">Like</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
@@ -136,37 +152,37 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
-              <div className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('like')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={like} alt="" />
                 </span>
               </div>
-              <div className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('love')} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={love} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('care')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={care} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('haha')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={haha} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('wow')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={wow} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('sad')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={sad} alt="" />
                 </span>
               </div>
-              <div className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+              <div onClick={() => setReaction('angry')} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={angry} alt="" />
                 </span>
