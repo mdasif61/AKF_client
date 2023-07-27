@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import useAllUser from "../hooks/useAllUser";
 
 const SingleBlog = ({ blog }) => {
 
@@ -37,6 +38,7 @@ const SingleBlog = ({ blog }) => {
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
+  const {users}=useAllUser()
 
   const getReactionLogo=()=>{
     switch(reaction){
@@ -53,14 +55,15 @@ const SingleBlog = ({ blog }) => {
 
   const mutation=useMutation(
     async(data)=>{
-      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}`,data).then(res=>res.data);
+      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`,data).then(res=>res.data);
     },
     {
       onSuccess:(data)=>{
-        if(data.result.modifiedCount>0){
-         return axiosSecure.patch(`/blog/prev-react/${blog._id}`, {name:data.reactName,post:blog})
-          .then(res=>console.log(res.data))
-        }
+        // if(data.result.modifiedCount>0){
+        //  return axiosSecure.patch(`/blog/prev-react/${blog._id}`, {name:data.reactName,post:blog})
+        //   .then(res=>console.log(res.data))
+        // }
+        console.log(data)
       }
     },
     {
