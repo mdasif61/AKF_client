@@ -27,10 +27,11 @@ import moment from "moment";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
+import useAllBlogs from "../hooks/useAllBlogs";
 
 const SingleBlog = ({ blog }) => {
 
-  const [axiosSecure]=useAxiosSecure()
+  const [axiosSecure] = useAxiosSecure()
 
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
@@ -38,36 +39,37 @@ const SingleBlog = ({ blog }) => {
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
-  const {users}=useAllUser()
+  const { users } = useAllUser()
+  const { refetch } = useAllBlogs()
 
-  const getReactionLogo=()=>{
-    switch(reaction){
-      case 'like':return <img src={like} alt="like" />;
-      case 'love':return <img src={love} alt="love" />;
-      case 'care':return <img src={care} alt="care" />;
-      case 'haha':return <img src={haha} alt="haha" />;
-      case 'sad':return <img src={sad} alt="sad" />;
-      case 'wow':return <img src={wow} alt="wow" />;
-      case 'angry':return <img src={angry} alt="angry" />;
-      default:return null;
+  const key = Object.keys(blog.reaction)
+  const check = key.find((react) => blog.reaction[react].count > 0);
+  const reactUser = key.find((react) => blog.reaction[react].count > 0);
+
+  const getReactionLogo = () => {
+    switch (check) {
+      case 'like': return <img src={like} alt="like" />;
+      case 'love': return <img src={love} alt="love" />;
+      case 'care': return <img src={care} alt="care" />;
+      case 'haha': return <img src={haha} alt="haha" />;
+      case 'sad': return <img src={sad} alt="sad" />;
+      case 'wow': return <img src={wow} alt="wow" />;
+      case 'angry': return <img src={angry} alt="angry" />;
+      default: return null;
     }
   }
 
-  const mutation=useMutation(
-    async(data)=>{
-      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`,data).then(res=>res.data);
+  const mutation = useMutation(
+    async (data) => {
+      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`, data).then(res => res.data);
     },
     {
-      onSuccess:(data)=>{
-        // if(data.result.modifiedCount>0){
-        //  return axiosSecure.patch(`/blog/prev-react/${blog._id}`, {name:data.reactName,post:blog})
-        //   .then(res=>console.log(res.data))
-        // }
-        console.log(data)
+      onSuccess: (data) => {
+        refetch()
       }
     },
     {
-      onError:(error)=>{
+      onError: (error) => {
         console.log(error)
       }
     }
@@ -99,9 +101,8 @@ const SingleBlog = ({ blog }) => {
           <div className="relative">
             <FontAwesomeIcon
               onClick={() => setOpen(!open)}
-              className={`cursor-pointer ${
-                open && "bg-gray-200"
-              } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
+              className={`cursor-pointer ${open && "bg-gray-200"
+                } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
               icon={faEllipsis}
             />
 
@@ -189,15 +190,13 @@ const SingleBlog = ({ blog }) => {
 
         <p className="font-semibold">{blog.text}</p>
         <div
-          className={`overflow-hidden avatar ${
-            blog.photo.length && "h-56"
-          } object-cover ${
-            blog.photo.length > 2 && blog.photo.length <= 4
+          className={`overflow-hidden avatar ${blog.photo.length && "h-56"
+            } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
               ? "grid-cols-2"
               : blog.photo.length > 4
-              ? "grid-cols-3"
-              : ""
-          } grid grid-cols-1 rounded-xl mt-4`}
+                ? "grid-cols-3"
+                : ""
+            } grid grid-cols-1 rounded-xl mt-4`}
         >
           {blog.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
@@ -223,15 +222,13 @@ const SingleBlog = ({ blog }) => {
             }}
             className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
           >
-            {reaction ? (
-              <div onClick={()=>setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
+            {check ? (
+              <div onClick={() => setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
                 <span>
                   {getReactionLogo()}
                 </span>
               </div>
-            ) : (
-              <FontAwesomeIcon icon={faThumbsUp} />
-            )}
+            ) : <FontAwesomeIcon icon={faThumbsUp} />}
             <span className="ml-1">Like</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
@@ -250,15 +247,15 @@ const SingleBlog = ({ blog }) => {
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('like'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={like} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('love')
                 mutation.mutate(blog)
               }} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
@@ -266,41 +263,41 @@ const SingleBlog = ({ blog }) => {
                   <img src={love} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('care'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={care} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('haha'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={haha} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('wow'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={wow} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('sad'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={sad} alt="" />
                 </span>
               </div>
-              <div onClick={()=>{
+              <div onClick={() => {
                 setReaction('angry'),
-                mutation.mutate(blog)
+                  mutation.mutate(blog)
               }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
                 <span>
                   <img src={angry} alt="" />
