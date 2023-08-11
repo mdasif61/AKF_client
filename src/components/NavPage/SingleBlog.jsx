@@ -28,6 +28,8 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
 import useAllBlogs from "../hooks/useAllBlogs";
+import useReaction from "../hooks/useReaction";
+import { mainContext } from "./AuthProvider";
 
 const SingleBlog = ({ blog }) => {
 
@@ -40,11 +42,20 @@ const SingleBlog = ({ blog }) => {
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser()
-  const { refetch } = useAllBlogs()
+  const { refetch } = useAllBlogs();
+  const { single_react, reactLoading } = useReaction(blog?.reaction);
+  const { user } = useContext(mainContext);
 
-  const key = Object.keys(blog.reaction)
-  const check = key.find((react) => blog.reaction[react].count > 0);
-  const reactUser = key.find((react) => blog.reaction[react].count > 0);
+  let check;
+  if (!reactLoading) {
+    single_react?.map((name) => {
+      check=(Object.keys(name).join(''))
+    });
+  }
+
+  // const key = Object.keys(blog.reaction)
+  // const check = key.find((react) => blog.reaction[react].count > 0);
+
 
   const getReactionLogo = () => {
     switch (check) {
