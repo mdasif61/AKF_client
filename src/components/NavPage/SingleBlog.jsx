@@ -42,20 +42,16 @@ const SingleBlog = ({ blog }) => {
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser()
-  const { refetch } = useAllBlogs();
-  const { single_react, reactLoading } = useReaction(blog?.reaction);
-  const { user } = useContext(mainContext);
+  const {  } = useAllBlogs();
+  const { single_react, reactLoading, refetch } = useReaction(blog?.reaction,blog._id);
 
   let check;
   if (!reactLoading) {
     single_react?.map((name) => {
-      check=(Object.keys(name).join(''))
+      console.log(name.reaction)
+      check=(Object.keys(name.reaction).join(''))
     });
   }
-
-  // const key = Object.keys(blog.reaction)
-  // const check = key.find((react) => blog.reaction[react].count > 0);
-
 
   const getReactionLogo = () => {
     switch (check) {
