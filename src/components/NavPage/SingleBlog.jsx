@@ -27,9 +27,7 @@ import moment from "moment";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
-import useAllBlogs from "../hooks/useAllBlogs";
 import useReaction from "../hooks/useReaction";
-import { mainContext } from "./AuthProvider";
 
 const SingleBlog = ({ blog }) => {
 
@@ -41,15 +39,13 @@ const SingleBlog = ({ blog }) => {
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
-  const { users } = useAllUser()
-  const {  } = useAllBlogs();
+  const { users } = useAllUser();
   const { single_react, reactLoading, refetch } = useReaction(blog?.reaction,blog._id);
 
   let check;
   if (!reactLoading) {
     single_react?.map((name) => {
-      console.log(name.reaction)
-      check=(Object.keys(name.reaction).join(''))
+      check=(Object.keys(name.reaction).join(''));
     });
   }
 
@@ -69,10 +65,12 @@ const SingleBlog = ({ blog }) => {
   const mutation = useMutation(
     async (data) => {
       return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`, data).then(res => res.data);
-    },
+    },  
     {
       onSuccess: (data) => {
-        refetch()
+        if(data.result.modifiedCount>0){
+          refetch()
+        }
       }
     },
     {
@@ -220,13 +218,12 @@ const SingleBlog = ({ blog }) => {
       <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
-            // onClick={()=>setReaction('like')}
-            onMouseOver={() => setLikeBox(true)}
-            onMouseOut={() => {
-              setTimeout(() => {
-                setLikeBox(false);
-              }, 2000);
+            onClick={()=>{
+              setReaction('like'),
+              mutation.mutate(blog)
             }}
+            onMouseOver={() => setLikeBox(true)}
+            onMouseOut={() => setLikeBox(false)}
             className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
           >
             {check ? (
@@ -251,6 +248,7 @@ const SingleBlog = ({ blog }) => {
         {likeBox && (
           <div
             onMouseOver={() => setLikeBox(true)}
+            onMouseOut={()=>setLikeBox(false)}
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
