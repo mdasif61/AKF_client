@@ -8,7 +8,7 @@ const useReaction = (reaction,id) => {
     const {users}=useAllUser()
     const keys=Object.keys(reaction)
 
-    const {data:single_react, refetch, isLoading:reactLoading}=useQuery(['single-reaction',users?._id,id],
+    const {data:single_react, refetch,isFetching, isLoading:reactLoading}=useQuery(['single-reaction',users?._id,id],
     async()=>{
         try {
             const res=await axiosSecure.get(`/single-reaction/${users?._id}?reaction=${keys}&&ids=${id}`);
@@ -18,7 +18,7 @@ const useReaction = (reaction,id) => {
         }
     });
 
-    return {single_react,refetch,reactLoading}
+    return {single_react,refetch,reactLoading,isFetching}
 };
 
 export default useReaction;

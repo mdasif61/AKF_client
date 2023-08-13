@@ -30,6 +30,7 @@ import useReaction from "../hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
+import useAllBlogs from "../hooks/useAllBlogs";
 
 const SeePost = ({ post }) => {
   const [axiosSecure]=useAxiosSecure()
@@ -41,8 +42,9 @@ const SeePost = ({ post }) => {
   const { profile } = useProfile(post?.userId);
   const [scroll, setScroll] = useState(false);
   const [reaction, setReaction] = useState('');
-  const {users}=useAllUser()
-  const { single_react, reactLoading, refetch } = useReaction(post?.reaction,post._id);
+  const {users}=useAllUser();
+  const {refetch:blogRefetch}=useAllBlogs()
+  const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction,post._id);
 
   const confirmData = {
     header: "Are You Sure?",
@@ -54,10 +56,9 @@ const SeePost = ({ post }) => {
   }, [scroll]);
 
   let check;
-  if (!reactLoading) {
+  if (!reactLoading&&!isFetching) {
     single_react?.map((name) => {
-      console.log(name.reaction)
-      check=(Object.keys(name.reaction).join(''))
+      check=(Object.keys(name.reaction).join(''));
     });
   }
 
@@ -77,10 +78,13 @@ const SeePost = ({ post }) => {
   const mutation = useMutation(
     async (data) => {
       return await axiosSecure.patch(`/blog/reaction/${post._id}?react=${reaction}&&user=${users._id}`, data).then(res => res.data);
-    },
+    },  
     {
       onSuccess: (data) => {
-        refetch()
+        if(data.result.modifiedCount>0){
+          blogRefetch()
+          refetch()
+        }
       }
     },
     {
@@ -229,23 +233,22 @@ const SeePost = ({ post }) => {
       <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
-            // onClick={()=>setReaction('like')}
-            onMouseOver={() => setLikeBox(true)}
-            onMouseOut={() => {
-              setTimeout(() => {
-                setLikeBox(false);
-              }, 2000);
+            onClick={()=>{
+              setReaction(check?check:'like'),
+              mutation.mutate(post)
             }}
-            className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
+            onMouseOver={() => setLikeBox(true)}
+            onMouseOut={() => setLikeBox(false)}
+            className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center flex items-center rounded-md"
           >
             {check ? (
-              <div onClick={() => setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
+              <div className=" hover:scale-125 duration-300 mx-1 text-gray-400 rounded-full w-5">
                 <span>
                   {getReactionLogo()}
                 </span>
               </div>
             ) : <FontAwesomeIcon icon={faThumbsUp} />}
-            <span className="ml-1">Like</span>
+            <span className="ml-1">{check?check:'Like'}</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
             <FontAwesomeIcon icon={faComment} />{" "}
@@ -260,6 +263,7 @@ const SeePost = ({ post }) => {
         {likeBox && (
           <div
             onMouseOver={() => setLikeBox(true)}
+            onMouseOut={()=>setLikeBox(false)}
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
