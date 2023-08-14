@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-[70vh] register">
+    <div className="h-auto register">
       <div className="flex p-30 w-full h-full">
         <div className="w-[50%] flex p-20 justify-center flex-col">
           <form onSubmit={handleLogin} className="regiForm">

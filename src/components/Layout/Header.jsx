@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "./Css/Header.css";
 import navlogo from "/public/Images/navLogo.png";
 import { mainContext } from "../NavPage/AuthProvider";
@@ -48,15 +48,13 @@ const Header = () => {
                 </NavLink>
               </span>
             )}
-            <div>
+            <div className="flex items-center justify-center">
               {user && (
-                <span>
-                  <img
-                    className="rounded-full bg-gray-300 w-10 h-10 ml-4"
-                    src={user.photoURL}
-                    alt=""
-                  />
-                </span>
+                <Link to='/dashboard/profile' className="avatar cursor-pointer">
+                    <div className="w-10 rounded-full">
+                      <img src={user.photoURL} />
+                    </div>
+                </Link>
               )}
             </div>
           </nav>

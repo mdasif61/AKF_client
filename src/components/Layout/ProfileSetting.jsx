@@ -5,42 +5,48 @@ import SideNav from "./SideNav";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useState } from "react";
 
 const ProfileSetting = () => {
-    useTitle("Profile Setting");
-    const {users}=useAllUser()
-    const [axiosSecure]=useAxiosSecure()
+  useTitle("Profile Setting");
+  const { users } = useAllUser()
+  const [axiosSecure] = useAxiosSecure();
+  const [profileLoading,setPorfileLoading]=useState(false)
 
-    const {handleSubmit, register}=useForm()
+  const { handleSubmit, register } = useForm()
 
-    const mutation=useMutation(async(data)=>{
-        return await axiosSecure.patch(`/profile-update?email=${users?.email}`,data)
-        .then(res=>res.data)
-    },
+  const mutation = useMutation(async (data) => {
+    return await axiosSecure.patch(`/profile-update?email=${users?.email}`, data)
+      .then(res => res.data)
+  },
     {
-        onSuccess:(data)=>{
-            console.log(data)
-        }
+      onSuccess: (data) => {
+        setPorfileLoading(false)
+        console.log(data)
+      }
     })
 
-    const onSubmit=(data)=>{
-        mutation.mutate(data)
-    }
+  const onSubmit = (data) => {
+    setPorfileLoading(true)
+    mutation.mutate(data)
+  }
 
   return (
     <div>
       <SideNav>
         <div className="profile shadow-lg">
           <div className="w-full h-full flex justify-between">
-            <div className="w-36 h-36 bg-white shadow-xl border-2 rounded-full flex items-center justify-center overflow-hidden">
-              <img className="w-full" src={users.image} alt="" />
+            <div className="avatar">
+              <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={users.image} />
+              </div>
             </div>
             <div className="flex-1 ml-8 flex items-center">
               <div>
-                <h1 className="text-2xl border-b-2 border-black pb-1">
+                <h1 className="text-2xl border-black">
                   {users.name}
                 </h1>
-                <h3 className="text-gray-500">
+                <h3 className="text-gray-500 text-sm">
                   <span className="font-semibold">E-mail :</span> {users.email}
                 </h3>
               </div>
@@ -151,7 +157,7 @@ const ProfileSetting = () => {
               </div>
 
               <div className="w-full text-right mt-4">
-                <input className="btn" type="submit" value="SAVE PROFILE" />
+                <input disabled={profileLoading} className="btn bg-green-500 border-none outline-none hover:bg-green-600" type="submit" value={profileLoading?'Saving...':'SAVE PROFILE'} />
               </div>
             </form>
           </div>

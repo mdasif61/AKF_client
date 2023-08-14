@@ -120,7 +120,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         </div>
 
         <p className="font-semibold">{blog.text}</p>
-        <div
+        {blog.photo.length && <div
           className={`overflow-hidden avatar ${blog.photo.length && "h-56"
             } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
               ? "grid-cols-2"
@@ -129,7 +129,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                 : ""
             } grid grid-cols-1 rounded-xl mt-4`}
         >
-          {blog?.photo.map((img, index) => (
+          {blog?.photo?.map((img, index) => (
             <div key={index} className="h-full w-full">
               <img
                 className="w-full object-cover object-center"
@@ -138,7 +138,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
               />
             </div>
           ))}
-        </div>
+        </div>}
       </div>
       {deleteCon && (
         <CustomModal

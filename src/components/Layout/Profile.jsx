@@ -148,7 +148,7 @@ const Profile = () => {
                   {users.gender}
                 </p>
               </div>
-              {blogs.length > 0 ? (
+              {blogs?.photo?.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-4 rounded-xl">
                   {blogs.map((blog) =>
                     blog.photo.map((img,index) => (
