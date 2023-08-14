@@ -30,20 +30,18 @@ import useReaction from "../hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
-import useAllBlogs from "../hooks/useAllBlogs";
 
 const SeePost = ({ post }) => {
   const [axiosSecure]=useAxiosSecure()
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
-  const { member } = useSeeProfile(post?.userId);
+  const { member, refetch:seeRefetch } = useSeeProfile(post?.userId);
   const [profileShow, setProfileShow] = useState(false);
   const { profile } = useProfile(post?.userId);
   const [scroll, setScroll] = useState(false);
   const [reaction, setReaction] = useState('');
   const {users}=useAllUser();
-  const {refetch:blogRefetch}=useAllBlogs()
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction,post._id);
 
   const confirmData = {
@@ -82,8 +80,8 @@ const SeePost = ({ post }) => {
     {
       onSuccess: (data) => {
         if(data.result.modifiedCount>0){
-          blogRefetch()
           refetch()
+          seeRefetch()
         }
       }
     },

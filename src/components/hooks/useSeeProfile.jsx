@@ -3,7 +3,7 @@ import useAxiosSecure from "./useAxiosSecure";
 
 const useSeeProfile = (id) => {
   const [axiosSecure] = useAxiosSecure();
-  const {data:member={}, isLoading} = useQuery(["see-profile", id], async () => {
+  const {data:member={}, isLoading,refetch} = useQuery(["see-profile", id], async () => {
     try {
       const res = await axiosSecure.get(`/blog/see-profile/${id}`);
       return res.data;
@@ -11,7 +11,7 @@ const useSeeProfile = (id) => {
       throw new Error(`see-profile: ${error}`);
     }
   });
-  return {member,isLoading}
+  return {member,isLoading,refetch}
 };
 
 export default useSeeProfile;

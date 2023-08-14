@@ -21,15 +21,17 @@ import moment from "moment";
 import useAxiosSecure from "../../src/components/hooks/useAxiosSecure";
 import useReaction from "../../src/components/hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
+import useMyBlog from "./hooks/useMyBlog";
 
 const MyBlog = ({ blog, modalDeletePost }) => {
-  const [axiosSecure]=useAxiosSecure()
+  const [axiosSecure] = useAxiosSecure()
   const { users } = useAllUser();
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
   const [reaction, setReaction] = useState('');
-  const { single_react, reactLoading, refetch } = useReaction(blog?.reaction,blog._id);
+  const { refetch: myRefetch } = useMyBlog()
+  const { single_react, reactLoading, refetch } = useReaction(blog?.reaction, blog._id);
 
   const confirmData = {
     header: "Are You Sure?",
@@ -40,7 +42,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   if (!reactLoading) {
     single_react?.map((name) => {
       console.log(name.reaction)
-      check=(Object.keys(name.reaction).join(''))
+      check = (Object.keys(name.reaction).join(''))
     });
   }
 
@@ -63,7 +65,8 @@ const MyBlog = ({ blog, modalDeletePost }) => {
     },
     {
       onSuccess: (data) => {
-        refetch()
+        refetch();
+        myRefetch()
       }
     },
     {
@@ -146,26 +149,25 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         />
       )}
 
-<div className="w-full relative mt-4 border-t p-2">
+      <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
-            // onClick={()=>setReaction('like')}
-            onMouseOver={() => setLikeBox(true)}
-            onMouseOut={() => {
-              setTimeout(() => {
-                setLikeBox(false);
-              }, 2000);
+            onClick={() => {
+              setReaction(check ? check : 'like'),
+                mutation.mutate(blog)
             }}
-            className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
+            onMouseOver={() => setLikeBox(true)}
+            onMouseOut={() => setLikeBox(false)}
+            className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center flex items-center rounded-md"
           >
             {check ? (
-              <div onClick={() => setReaction('')} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-5">
+              <div className=" hover:scale-125 duration-300 mx-1 text-gray-400 rounded-full w-5">
                 <span>
                   {getReactionLogo()}
                 </span>
               </div>
             ) : <FontAwesomeIcon icon={faThumbsUp} />}
-            <span className="ml-1">Like</span>
+            <span className="ml-1">{check ? check : 'Like'}</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
             <FontAwesomeIcon icon={faComment} />{" "}
@@ -180,6 +182,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         {likeBox && (
           <div
             onMouseOver={() => setLikeBox(true)}
+            onMouseOut={() => setLikeBox(false)}
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">
