@@ -43,6 +43,7 @@ const SeePost = ({ post }) => {
   const [reaction, setReaction] = useState('');
   const {users}=useAllUser();
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction,post._id);
+  const [showText,setShowText]=useState(false)
 
   const confirmData = {
     header: "Are You Sure?",
@@ -206,7 +207,11 @@ const SeePost = ({ post }) => {
           {/* profile end */}
         </div>
 
-        <p className="font-semibold">{post.text}</p>
+        <p onClick={() => setShowText(!showText)}>{showText ? post.text : <>
+          {post.text.slice(0, 150)}
+          {" "}
+          {post.text.length > 150 && <button className="text-gray-400 text-base" onClick={() => setShowText(!showText)}>see more</button>}
+        </>}</p>
         <div
           className={`overflow-hidden avatar ${post.photo.length && "h-56"
             } object-cover ${post.photo.length > 2 && post.photo.length <= 4

@@ -41,13 +41,14 @@ const SingleBlog = ({ blog }) => {
   const [profileShow, setProfileShow] = useState(false);
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
-  const {refetch:blogRefetch}=useAllBlogs();
-  const { single_react, reactLoading, isFetching,refetch } = useReaction(blog?.reaction,blog._id);
+  const { refetch: blogRefetch } = useAllBlogs();
+  const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
+  const [showText, setShowText] = useState(false)
 
   let check;
-  if (!reactLoading&&!isFetching) {
+  if (!reactLoading && !isFetching) {
     single_react?.map((name) => {
-      check=(Object.keys(name.reaction).join(''));
+      check = (Object.keys(name.reaction).join(''));
     });
   }
 
@@ -67,10 +68,10 @@ const SingleBlog = ({ blog }) => {
   const mutation = useMutation(
     async (data) => {
       return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`, data).then(res => res.data);
-    },  
+    },
     {
       onSuccess: (data) => {
-        if(data.result.modifiedCount>0){
+        if (data.result.modifiedCount > 0) {
           refetch()
           blogRefetch()
         }
@@ -196,7 +197,11 @@ const SingleBlog = ({ blog }) => {
           {/* profile end */}
         </div>
 
-        <p className="font-semibold">{blog.text}</p>
+        <p onClick={() => setShowText(!showText)}>{showText ? blog.text : <>
+          {blog.text.slice(0, 150)}
+          {" "}
+          {blog.text.length > 150 && <button className="text-gray-400 text-base" onClick={() => setShowText(!showText)}>see more</button>}
+        </>}</p>
         <div
           className={`overflow-hidden avatar ${blog.photo.length && "h-56"
             } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
@@ -221,9 +226,9 @@ const SingleBlog = ({ blog }) => {
       <div className="w-full relative mt-4 border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
-            onClick={()=>{
-              setReaction(check?check:'like'),
-              mutation.mutate(blog)
+            onClick={() => {
+              setReaction(check ? check : 'like'),
+                mutation.mutate(blog)
             }}
             onMouseOver={() => setLikeBox(true)}
             onMouseOut={() => setLikeBox(false)}
@@ -236,7 +241,7 @@ const SingleBlog = ({ blog }) => {
                 </span>
               </div>
             ) : <FontAwesomeIcon icon={faThumbsUp} />}
-            <span className="ml-1">{check?check:'Like'}</span>
+            <span className="ml-1">{check ? check : 'Like'}</span>
           </div>
           <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
             <FontAwesomeIcon icon={faComment} />{" "}
@@ -251,7 +256,7 @@ const SingleBlog = ({ blog }) => {
         {likeBox && (
           <div
             onMouseOver={() => setLikeBox(true)}
-            onMouseOut={()=>setLikeBox(false)}
+            onMouseOut={() => setLikeBox(false)}
             className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
           >
             <div className="avatar placeholder">

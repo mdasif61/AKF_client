@@ -148,12 +148,13 @@ const Profile = () => {
                   {users.gender}
                 </p>
               </div>
-              {blogs?.photo?.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-4 rounded-xl">
+              {blogs?.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-3 rounded-xl">
                   {blogs.map((blog) =>
-                    blog.photo.map((img,index) => (
+                    blog.photo.map((img, index) => (
                       <div key={index} className="avatar">
-                        <div className="w-24 rounded-xl">
+                        <div className="w-24 hover:scale-95 duration-200 relative cursor-pointer rounded-xl">
+                          <span className="absolute w-full h-full opacity-0 hover:bg-zinc-300 z-50 hover:opacity-30"></span>
                           <img src={img} />
                         </div>
                       </div>
@@ -163,6 +164,7 @@ const Profile = () => {
               ) : (
                 <h1 className="mt-5 text-xl text-gray-400">No Photos</h1>
               )}
+
             </div>
             <div className="md:col-span-3">
               {blogs.length > 0 ? (

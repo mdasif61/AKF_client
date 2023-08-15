@@ -32,6 +32,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   const [reaction, setReaction] = useState('');
   const { refetch: myRefetch } = useMyBlog()
   const { single_react, reactLoading, refetch } = useReaction(blog?.reaction, blog._id);
+  const [showText,setShowText]=useState(false)
 
   const confirmData = {
     header: "Are You Sure?",
@@ -119,8 +120,12 @@ const MyBlog = ({ blog, modalDeletePost }) => {
           </div>
         </div>
 
-        <p className="font-semibold">{blog.text}</p>
-        {blog.photo.length && <div
+        <p onClick={() => setShowText(!showText)}>{showText ? blog.text : <>
+          {blog.text.slice(0, 150)}
+          {" "}
+          {blog.text.length > 150 && <button className="text-gray-400 text-base" onClick={() => setShowText(!showText)}>see more</button>}
+        </>}</p>
+        <div
           className={`overflow-hidden avatar ${blog.photo.length && "h-56"
             } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
               ? "grid-cols-2"
@@ -138,7 +143,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
               />
             </div>
           ))}
-        </div>}
+        </div>
       </div>
       {deleteCon && (
         <CustomModal

@@ -17,7 +17,6 @@ const Modal = ({ handleClose, data: userInfo }) => {
   const closeRef = useRef(null);
   const { user } = useContext(mainContext);
   const { refetch } = useMyBlog();
-  const {isOpen,setIsOpen}=useState(false)
 
   const fileInputRef = useRef(null);
   const { handleSubmit, register, setValue } = useForm();
@@ -29,7 +28,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
     {
       onSuccess: (data) => {
         if (data.insertedId) {
-          closeRef.current.close();
+          handleClose()
           refetch();
           setLoading(false);
         }
@@ -43,6 +42,9 @@ const Modal = ({ handleClose, data: userInfo }) => {
   );
 
   const onSubmit = (data) => {
+    if(data.status=='' && !image){
+      return;
+    }
     setLoading(true)
     setImage(true)
     const { status } = data;
@@ -66,7 +68,6 @@ const Modal = ({ handleClose, data: userInfo }) => {
       date: Date.now()
     };
     mutation.mutate(blogData);
-    setLoading(false)
   };
 
   const handleClick = () => {
@@ -95,7 +96,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
           const imageUrl = imageData.data.display_url;
           setImage(prevImg => [imageUrl, ...prevImg]);
         }
-        setLoading(false)
+        setLoading(false);
       });
 
   };
@@ -117,10 +118,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
           className="w-5/12 p-5 rounded-xl"
         >
           <button
-            onClick={()=>{
-              handleClose();
-              closeRef.current.close()
-            }}
+            onClick={handleClose}
             className="btn btn-circle btn-sm text-xl bg-red-600 border-none absolute right-2 top-2"
           >
             <FontAwesomeIcon icon={faXmark} />
@@ -183,7 +181,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
             </div>
 
             <button disabled={loading} type="submit" className="btn btn-block bg-black">
-              Post
+              {loading?'Posting...':'Post'}
             </button>
           </form>
         </dialog>
