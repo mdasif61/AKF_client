@@ -42,7 +42,8 @@ const Modal = ({ handleClose, data: userInfo }) => {
   );
 
   const onSubmit = (data) => {
-    if(data.status=='' && !image){
+
+    if(!image.length && !data.status){
       return;
     }
     setLoading(true)

@@ -28,6 +28,7 @@ const Profile = () => {
   const { blogs, isLoading, refetch } = useMyBlog();
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const [showBio,setShowBio]=useState(false);
 
   const handleOpen = (data) => {
     setIsOpen(true);
@@ -46,9 +47,7 @@ const Profile = () => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
         if (data.deletedCount > 0) {
-          console.log(data);
           refetch();
         }
       },
@@ -76,10 +75,14 @@ const Profile = () => {
             </div>
             <div className="flex-1 ml-6 flex items-center">
               <div>
-                <h1 className="text-2xl border-b border-black pb-1">
+                <h1 className="text-2xl">
                   {users.name}
                 </h1>
-                <h3 className="text-gray-500">{users.bio}</h3>
+                <h3 onClick={()=>setShowBio(!showBio)} className={` text-gray-500 text-sm ${showBio?'w-10/12':'w-auto'}`}>{showBio?users.bio:<>
+                {users?.bio?.slice(0,20)}
+                {" "}
+                {users?.bio?.length>20&& <button onClick={()=>setShowBio(!showBio)} className="text-gray-400">...see bio</button>}
+                </>}</h3>
               </div>
             </div>
             <div>

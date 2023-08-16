@@ -11,9 +11,10 @@ const ProfileSetting = () => {
   useTitle("Profile Setting");
   const { users } = useAllUser()
   const [axiosSecure] = useAxiosSecure();
-  const [profileLoading,setPorfileLoading]=useState(false)
-
+  const [profileLoading,setPorfileLoading]=useState(false);
+  
   const { handleSubmit, register } = useForm()
+  const [bioText,setBioText]=useState('')
 
   const mutation = useMutation(async (data) => {
     return await axiosSecure.patch(`/profile-update?email=${users?.email}`, data)
@@ -150,10 +151,13 @@ const ProfileSetting = () => {
                 <br />
                 <textarea
                   {...register("bio")}
+                  onChange={(e)=>setBioText(e.target.value)}
                   className="w-full p-5 mt-2 focus:outline-none border resize-none rounded-xl"
                   placeholder="Bio"
                   id=""
+                  maxLength={200}
                 ></textarea>
+                <p>Length : {bioText.length}/200</p>
               </div>
 
               <div className="w-full text-right mt-4">
