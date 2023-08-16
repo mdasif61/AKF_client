@@ -31,7 +31,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
 
-const SeePost = ({ post }) => {
+const SeePost = ({ post,setPostUser }) => {
   const [axiosSecure] = useAxiosSecure()
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
@@ -44,6 +44,7 @@ const SeePost = ({ post }) => {
   const { users } = useAllUser();
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction, post._id);
   const [showText, setShowText] = useState(false)
+  setPostUser(post?.userId)
 
   const confirmData = {
     header: "Are You Sure?",
