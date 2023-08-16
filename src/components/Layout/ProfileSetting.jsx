@@ -157,7 +157,7 @@ const ProfileSetting = () => {
                   id=""
                   maxLength={200}
                 ></textarea>
-                <p>Length : {bioText.length}/200</p>
+                <p className="text-gray-400 text-sm text-right">Length : {bioText.length}/200</p>
               </div>
 
               <div className="w-full text-right mt-4">
