@@ -29,6 +29,7 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
 import useReaction from "../hooks/useReaction";
 import useAllBlogs from "../hooks/useAllBlogs";
+import useTotalReaction from "../hooks/useTotalReaction";
 
 const SingleBlog = ({ blog }) => {
 
@@ -43,7 +44,8 @@ const SingleBlog = ({ blog }) => {
   const { users } = useAllUser();
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
-  const [showText, setShowText] = useState(false)
+  const [showText, setShowText] = useState(false);
+  const {totalReactCount,refetch:totalReactRefetch}=useTotalReaction(blog?._id)
 
   let check;
   if (!reactLoading && !isFetching) {
@@ -73,6 +75,7 @@ const SingleBlog = ({ blog }) => {
       onSuccess: (data) => {
         if (data.result.modifiedCount > 0) {
           refetch()
+          totalReactRefetch()
           blogRefetch()
         }
       }
@@ -222,8 +225,10 @@ const SingleBlog = ({ blog }) => {
           ))}
         </div>
       </div>
-
-      <div className="w-full relative mt-4 border-t p-2">
+      <div>
+        <p className="text-gray-500 ml-2 mb-2">{totalReactCount}</p>
+      </div>
+      <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
             onClick={() => {
