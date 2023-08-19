@@ -44,8 +44,8 @@ const SingleBlog = ({ blog }) => {
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
-  const {totalReactCount,refetch:totalReactRefetch}=useTotalReaction(blog?._id)
-  console.log(totalReactCount[0].remainIcon)
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id)
+
   let check;
   if (!reactLoading && !isFetching) {
     single_react?.map((name) => {
@@ -224,8 +224,23 @@ const SingleBlog = ({ blog }) => {
           ))}
         </div>
       </div>
-      <div>
-        <p className="text-gray-500 ml-2 mb-2">{totalReactCount[0]?.totalReactionCount}</p>
+      <div className="flex items-center mb-2">
+        <div className="flex ml-2">
+          {totalReactCount[0]?.remainIcon.map((react) => (
+            <div>
+              {react === 'like' && <img className="w-4" src={like} alt="" />}
+              {react === 'love' && <img className="w-4" src={love} alt="" />}
+              {react === 'care' && <img className="w-4" src={care} alt="" />}
+              {react === 'wow' && <img className="w-4" src={wow} alt="" />}
+              {react === 'sad' && <img className="w-4" src={sad} alt="" />}
+              {react === 'haha' && <img className="w-4" src={haha} alt="" />}
+              {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+            </div>
+          ))}
+        </div>
+        <Link>
+          <p className="text-gray-500 ml-2 hover:underline">{totalReactCount[0]?.totalReactionCount}</p>
+        </Link>
       </div>
       <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">

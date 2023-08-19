@@ -30,8 +30,9 @@ import useReaction from "../hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
+import useTotalReaction from "../hooks/useTotalReaction";
 
-const SeePost = ({ post,setPostUser }) => {
+const SeePost = ({ post, setPostUser }) => {
   const [axiosSecure] = useAxiosSecure()
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
@@ -44,7 +45,8 @@ const SeePost = ({ post,setPostUser }) => {
   const { users } = useAllUser();
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction, post._id);
   const [showText, setShowText] = useState(false)
-  setPostUser(post?.userId)
+  setPostUser(post?.userId);
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(post?._id)
 
   const confirmData = {
     header: "Are You Sure?",
@@ -83,6 +85,7 @@ const SeePost = ({ post,setPostUser }) => {
       onSuccess: (data) => {
         if (data.result.modifiedCount > 0) {
           refetch()
+          totalReactRefetch()
           seeRefetch()
         }
       }
@@ -235,7 +238,24 @@ const SeePost = ({ post,setPostUser }) => {
           </div>
         </div>
 
-        <div className="w-full relative mt-4 border-t p-2">
+        <div className="flex items-center mb-2">
+          <div className="flex ml-2">
+            {totalReactCount[0]?.remainIcon.map((react) => (
+              <div>
+                {react === 'like' && <img className="w-4" src={like} alt="" />}
+                {react === 'love' && <img className="w-4" src={love} alt="" />}
+                {react === 'care' && <img className="w-4" src={care} alt="" />}
+                {react === 'wow' && <img className="w-4" src={wow} alt="" />}
+                {react === 'sad' && <img className="w-4" src={sad} alt="" />}
+                {react === 'haha' && <img className="w-4" src={haha} alt="" />}
+                {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-500 ml-2">{totalReactCount[0]?.totalReactionCount}</p>
+        </div>
+
+        <div className="w-full relative border-t p-2">
           <div className="w-full flex justify-between items-center">
             <div
               onClick={() => {

@@ -22,6 +22,7 @@ import useAxiosSecure from "../../src/components/hooks/useAxiosSecure";
 import useReaction from "../../src/components/hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
 import useMyBlog from "./hooks/useMyBlog";
+import useTotalReaction from "../components/hooks/useTotalReaction";
 
 const MyBlog = ({ blog, modalDeletePost }) => {
   const [axiosSecure] = useAxiosSecure()
@@ -32,7 +33,8 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   const [reaction, setReaction] = useState('');
   const { refetch: myRefetch } = useMyBlog()
   const { single_react, reactLoading, refetch } = useReaction(blog?.reaction, blog._id);
-  const [showText,setShowText]=useState(false)
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
+  const [showText, setShowText] = useState(false)
 
   const confirmData = {
     header: "Are You Sure?",
@@ -67,6 +69,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
     {
       onSuccess: (data) => {
         refetch();
+        totalReactRefetch()
         myRefetch()
       }
     },
@@ -154,7 +157,24 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         />
       )}
 
-      <div className="w-full relative mt-4 border-t p-2">
+      <div className="flex items-center mb-2">
+        <div className="flex ml-2">
+          {totalReactCount[0]?.remainIcon.map((react) => (
+            <div>
+              {react === 'like' && <img className="w-4" src={like} alt="" />}
+              {react === 'love' && <img className="w-4" src={love} alt="" />}
+              {react === 'care' && <img className="w-4" src={care} alt="" />}
+              {react === 'wow' && <img className="w-4" src={wow} alt="" />}
+              {react === 'sad' && <img className="w-4" src={sad} alt="" />}
+              {react === 'haha' && <img className="w-4" src={haha} alt="" />}
+              {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+            </div>
+          ))}
+        </div>
+        <p className="text-gray-500 ml-2">{totalReactCount[0]?.totalReactionCount}</p>
+      </div>
+
+      <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
             onClick={() => {
