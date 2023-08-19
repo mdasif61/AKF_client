@@ -32,7 +32,6 @@ import useAllBlogs from "../hooks/useAllBlogs";
 import useTotalReaction from "../hooks/useTotalReaction";
 
 const SingleBlog = ({ blog }) => {
-
   const [axiosSecure] = useAxiosSecure()
 
   const [open, setOpen] = useState(false);
@@ -46,7 +45,7 @@ const SingleBlog = ({ blog }) => {
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
   const {totalReactCount,refetch:totalReactRefetch}=useTotalReaction(blog?._id)
-
+  console.log(totalReactCount[0].remainIcon)
   let check;
   if (!reactLoading && !isFetching) {
     single_react?.map((name) => {
@@ -226,7 +225,7 @@ const SingleBlog = ({ blog }) => {
         </div>
       </div>
       <div>
-        <p className="text-gray-500 ml-2 mb-2">{totalReactCount}</p>
+        <p className="text-gray-500 ml-2 mb-2">{totalReactCount[0]?.totalReactionCount}</p>
       </div>
       <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">
