@@ -30,6 +30,7 @@ import useAllUser from "../hooks/useAllUser";
 import useReaction from "../hooks/useReaction";
 import useAllBlogs from "../hooks/useAllBlogs";
 import useTotalReaction from "../hooks/useTotalReaction";
+import useReactedProfile from "../hooks/useReactedProfile";
 
 const SingleBlog = ({ blog }) => {
   const [axiosSecure] = useAxiosSecure()
@@ -44,7 +45,8 @@ const SingleBlog = ({ blog }) => {
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
-  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id)
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
+  const {}=useReactedProfile(blog?.reaction,blog?._id)
 
   let check;
   if (!reactLoading && !isFetching) {
