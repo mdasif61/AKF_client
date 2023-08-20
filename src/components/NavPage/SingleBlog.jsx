@@ -40,13 +40,14 @@ const SingleBlog = ({ blog }) => {
   const [deleteCon, setDeleteCon] = useState(false);
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
+  const [showReactedName, setShowReactedName] = useState(false)
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
+  const { reacted,refetch:reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
   const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
-  const {}=useReactedProfile(blog?.reaction,blog?._id)
 
   let check;
   if (!reactLoading && !isFetching) {
@@ -77,6 +78,7 @@ const SingleBlog = ({ blog }) => {
         if (data.result.modifiedCount > 0) {
           refetch()
           totalReactRefetch()
+          reactedRefetch()
           blogRefetch()
         }
       }
@@ -89,7 +91,7 @@ const SingleBlog = ({ blog }) => {
   )
 
   return (
-    <div className="w-full border bg-white rounded-lg mb-5">
+    <div className="w-full border relative bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
         <div className="flex items-center mb-4 relative">
           <Link to={`/blog/see-profile/${blog.userId}`}>
@@ -241,9 +243,14 @@ const SingleBlog = ({ blog }) => {
           ))}
         </div>
         <Link>
-          <p className="text-gray-500 ml-2 hover:underline">{totalReactCount[0]?.totalReactionCount}</p>
+          <p onMouseOver={()=>setShowReactedName(true)} onMouseOut={()=>setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline">{totalReactCount[0]?.totalReactionCount}</p>
         </Link>
       </div>
+
+      {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
+        {reacted.map((name)=><p className="text-sm">{name.name}</p>)}
+      </div>}
+
       <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">
           <div
