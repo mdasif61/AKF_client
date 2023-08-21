@@ -31,6 +31,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
 import useTotalReaction from "../hooks/useTotalReaction";
+import useReactedProfile from "../hooks/useReactedProfile";
 
 const SeePost = ({ post, setPostUser }) => {
   const [axiosSecure] = useAxiosSecure()
@@ -39,10 +40,12 @@ const SeePost = ({ post, setPostUser }) => {
   const [likeBox, setLikeBox] = useState(false);
   const { member, refetch: seeRefetch } = useSeeProfile(post?.userId);
   const [profileShow, setProfileShow] = useState(false);
+  const [showReactedName, setShowReactedName] = useState(false)
   const { profile } = useProfile(post?.userId);
   const [scroll, setScroll] = useState(false);
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
+  const { reacted, refetch: reactedRefetch } = useReactedProfile(post?.reaction, post?._id);
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction, post._id);
   const [showText, setShowText] = useState(false)
   setPostUser(post?.userId);
@@ -99,7 +102,7 @@ const SeePost = ({ post, setPostUser }) => {
 
   return (
     <>
-      <div className="w-full border bg-white rounded-lg mb-5">
+      <div className="w-full border relative bg-white rounded-lg mb-5">
         <div className="p-5 w-full">
           <div className="flex items-center mb-4 relative">
             <Link to={`/blog/see-profile/${member?.image?.userId}`}>
@@ -252,8 +255,12 @@ const SeePost = ({ post, setPostUser }) => {
               </div>
             ))}
           </div>
-          <p className="text-gray-500 ml-2">{totalReactCount[0]?.totalReactionCount}</p>
+          <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 hover:underline hover:cursor-pointer ml-2">{totalReactCount[0]?.totalReactionCount}</p>
         </div>
+
+        {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
+          {reacted.map((name) => <p className="text-sm">{name.name}</p>)}
+        </div>}
 
         <div className="w-full relative border-t p-2">
           <div className="w-full flex justify-between items-center">

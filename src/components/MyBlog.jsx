@@ -5,6 +5,12 @@ import {
   faComment,
   faEdit,
   faEllipsis,
+  faEnvelope,
+  faFemale,
+  faGroupArrowsRotate,
+  faLocation,
+  faMale,
+  faPhone,
   faShare,
   faThumbsUp,
   faTrash,
@@ -23,10 +29,15 @@ import useReaction from "../../src/components/hooks/useReaction";
 import { useMutation } from "@tanstack/react-query";
 import useMyBlog from "./hooks/useMyBlog";
 import useTotalReaction from "../components/hooks/useTotalReaction";
+import useReactedProfile from "./hooks/useReactedProfile";
+import { Link } from "react-router-dom";
 
 const MyBlog = ({ blog, modalDeletePost }) => {
   const [axiosSecure] = useAxiosSecure()
   const { users } = useAllUser();
+  const { reacted, refetch: reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
+  const [profileShow, setProfileShow] = useState(false);
+  const [showReactedName, setShowReactedName] = useState(false)
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
@@ -81,14 +92,20 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   )
 
   return (
-    <div className="w-full border mb-5">
+    <div className="w-full relative border mb-5">
       <div className="p-5 w-full">
-        <div className="flex items-center mb-4">
-          <div className="avatar">
-            <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src={users?.image} alt="" />
+        <div className="flex items-center mb-4 relative">
+          <Link to={`/blog/see-profile/${blog.userId}`}>
+            <div
+              onMouseOver={() => setProfileShow(true)}
+              onMouseOut={() => setProfileShow(false)}
+              className="avatar hover:cursor-pointer"
+            >
+              <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={blog?.userPhoto} alt="" />
+              </div>
             </div>
-          </div>
+          </Link>
           <div className="flex-1 ml-4">
             <h3 className="font-bold">{users?.name}</h3>
             <h3>
@@ -122,6 +139,71 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             )}
           </div>
         </div>
+
+        {/* profile start */}
+        {profileShow && (
+          <div
+            onMouseOver={() => setProfileShow(true)}
+            onMouseOut={() => setProfileShow(false)}
+            className="p-5 bg-gray-100 shadow-md -left-1/2 top-10 flex items-center justify-center backdrop-blur-lg bg-opacity-70 z-40 rounded-xl absolute"
+          >
+            <Link to={`/blog/see-profile/${blog.userId}`}>
+              <div className="avatar mr-4 p-5">
+                <div className="w-20 rounded-full">
+                  <img src={users.image} alt="" />
+                </div>
+              </div>
+            </Link>
+            <div>
+              <p>
+                <span className="font-normal">
+                  <FontAwesomeIcon className="mr-2" icon={faPhone} /> Phone :
+                </span>{" "}
+                {users.phone}
+              </p>
+              <p>
+                <span className="font-normal">
+                  <FontAwesomeIcon className="mr-2" icon={faEnvelope} />{" "}
+                  E-mail :{" "}
+                </span>{" "}
+                {users.email}
+              </p>
+              <p>
+                <span className="font-normal">
+                  <FontAwesomeIcon className="mr-2" icon={faLocation} />{" "}
+                  Address :
+                </span>{" "}
+                {users.address}
+              </p>
+              <p>
+                <span className="font-normal">
+                  <FontAwesomeIcon
+                    className="mr-2"
+                    icon={faGroupArrowsRotate}
+                  />{" "}
+                  Blood Group :{" "}
+                </span>{" "}
+                {users.blood}
+              </p>
+              <p>
+                <span className="font-normal">
+                  <FontAwesomeIcon
+                    className="mr-2"
+                    icon={users.gender == "Male" ? faMale : faFemale}
+                  />{" "}
+                  Gender :{" "}
+                </span>{" "}
+                {users.gender}
+              </p>
+              <Link to={`/blog/see-profile/${blog.userId}`}>
+                <button className="btn btn-block bg-blue-600 border-none hover:bg-blue-500 mt-4">
+                  See Profile
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+        {/* profile end */}
 
         <p onClick={() => setShowText(!showText)}>{showText ? blog.text : <>
           {blog.text.slice(0, 150)}
@@ -171,8 +253,12 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             </div>
           ))}
         </div>
-        <p className="text-gray-500 ml-2">{totalReactCount[0]?.totalReactionCount}</p>
+        <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:cursor-pointer hover:underline">{totalReactCount[0]?.totalReactionCount}</p>
       </div>
+
+      {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
+        {reacted.map((name) => <p className="text-sm">{name.name}</p>)}
+      </div>}
 
       <div className="w-full relative border-t p-2">
         <div className="w-full flex justify-between items-center">

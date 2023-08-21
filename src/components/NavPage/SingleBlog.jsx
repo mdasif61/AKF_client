@@ -242,9 +242,7 @@ const SingleBlog = ({ blog }) => {
             </div>
           ))}
         </div>
-        <Link>
-          <p onMouseOver={()=>setShowReactedName(true)} onMouseOut={()=>setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline">{totalReactCount[0]?.totalReactionCount}</p>
-        </Link>
+          <p onMouseOver={()=>setShowReactedName(true)} onMouseOut={()=>setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
       </div>
 
       {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
