@@ -9,6 +9,7 @@ import {
   faGroupArrowsRotate,
   faLocation,
   faMale,
+  faPaperPlane,
   faPhone,
   faShare,
   faThumbsUp,
@@ -40,10 +41,12 @@ const SingleBlog = ({ blog }) => {
   const [deleteCon, setDeleteCon] = useState(false);
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
-  const [showReactedName, setShowReactedName] = useState(false)
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [showReactedName, setShowReactedName] = useState(false);
+  const [send, setSend] = useState(false)
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
-  const { reacted,refetch:reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
+  const { reacted, refetch: reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
@@ -242,11 +245,11 @@ const SingleBlog = ({ blog }) => {
             </div>
           ))}
         </div>
-          <p onMouseOver={()=>setShowReactedName(true)} onMouseOut={()=>setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
+        <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
       </div>
 
       {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
-        {reacted.map((name)=><p className="text-sm">{name.name}</p>)}
+        {reacted.map((name) => <p className="text-sm">{name.name}</p>)}
       </div>}
 
       <div className="w-full relative border-t p-2">
@@ -269,7 +272,7 @@ const SingleBlog = ({ blog }) => {
             ) : <FontAwesomeIcon icon={faThumbsUp} />}
             <span className="ml-1">{check ? check : 'Like'}</span>
           </div>
-          <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
+          <div onClick={() => setShowCommentBox(!showCommentBox)} className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
             <FontAwesomeIcon icon={faComment} />{" "}
             <span className="ml-1">Comment</span>
           </div>
@@ -346,6 +349,19 @@ const SingleBlog = ({ blog }) => {
           </div>
         )}
       </div>
+      {
+        showCommentBox && <div onClick={()=>setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border ${send&&'h-20 rounded-2xl'} border-gray-300 text-gray-500 rounded-full overflow-hidden my-4`}>
+          
+          <textarea name="" className="px-4 overflow-y-hidden h-auto py-3 resize-none focus:outline-none w-full" id="" placeholder="Write a public comment..."></textarea>
+          {
+            send && <div className="text-right px-5">
+              <button className="mb-3">
+                <FontAwesomeIcon className="text-blue-500 hover:text-blue-600" icon={faPaperPlane} />
+              </button>
+            </div>
+          }
+        </div>
+      }
     </div>
   );
 };
