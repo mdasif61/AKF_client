@@ -61,7 +61,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
         wow: { users: [], count: 0 },
         angry: { users: [], count: 0 }
       },
-      status: "Pending",
+      comments:[],
       email: user.email,
       userPhoto: user.photoURL,
       userName: user.displayName,

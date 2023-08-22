@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
@@ -91,7 +91,49 @@ const SingleBlog = ({ blog }) => {
         console.log(error)
       }
     }
-  )
+  );
+
+  const commentMutation = useMutation(
+    async (comment) => {
+      return await axiosSecure.patch(`/blog/comments/${blog._id}?user=${users._id}`, { comment }).then(res => res.data)
+    },
+    {
+      onSuccess: (data) => {
+        if (data.modifiedCount > 0) {
+          refetch()
+          totalReactRefetch()
+          reactedRefetch()
+          blogRefetch()
+        }
+      }
+    },
+    {
+      onError: (error) => {
+        console.log(error)
+      }
+    }
+  );
+
+  const commentRef = useRef(null);
+  const submitComment = () => {
+    commentMutation.mutate(commentRef.current.value)
+  }
+
+  const commentBoxRef = useRef(null);
+  useEffect(() => {
+    const handleOutsideOfCommentBox = (event) => {
+      if (commentBoxRef.current && !commentBoxRef.current.contains(event.target)) {
+        setShowCommentBox(false)
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideOfCommentBox);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideOfCommentBox)
+    }
+
+  }, [])
 
   return (
     <div className="w-full border relative bg-white rounded-lg mb-5">
@@ -350,18 +392,30 @@ const SingleBlog = ({ blog }) => {
         )}
       </div>
       {
-        showCommentBox && <div onClick={()=>setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border ${send&&'h-20 rounded-2xl'} border-gray-300 text-gray-500 rounded-full overflow-hidden my-4`}>
-          
-          <textarea name="" className="px-4 overflow-y-hidden h-auto py-3 resize-none focus:outline-none w-full" id="" placeholder="Write a public comment..."></textarea>
+        showCommentBox && <div ref={commentBoxRef} onClick={() => setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${send ? 'h-20 rounded-2xl' : 'rounded-full'} border-gray-300 text-gray-500 my-4`}>
+
+          <textarea ref={commentRef} name="" className={`${send ? 'h-[60%]' : 'h-full'} px-4 overflow-y-hidden py-2 resize-none focus:outline-none w-full`} id="" placeholder="Write a public comment..."></textarea>
           {
             send && <div className="text-right px-5">
-              <button className="mb-3">
+              <button type="submit" onClick={submitComment} className="mb-3">
                 <FontAwesomeIcon className="text-blue-500 hover:text-blue-600" icon={faPaperPlane} />
               </button>
             </div>
           }
         </div>
       }
+
+      {/* all-comment */}
+      {
+        showCommentBox && <div className="p-5">
+          {
+            blog.comments.slice(0,3).map((comment) => (
+              <p className="bg-gray-300 py-2 px-4 rounded-full my-1 bg-opacity-30">{comment.comment}</p>
+            ))
+          }
+        </div>
+      }
+
     </div>
   );
 };
