@@ -47,7 +47,7 @@ const SingleBlog = ({ blog }) => {
   const [send, setSend] = useState(false)
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
-  const {commentProfile}=useCommentProfile(blog?._id)
+  const { commentProfile, refetch: commentRefetch } = useCommentProfile(blog?._id);
   const { reacted, refetch: reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
@@ -105,6 +105,7 @@ const SingleBlog = ({ blog }) => {
           refetch()
           totalReactRefetch()
           reactedRefetch()
+          commentRefetch()
           blogRefetch()
         }
       }
@@ -275,21 +276,27 @@ const SingleBlog = ({ blog }) => {
           ))}
         </div>
       </div>
-      <div className="flex items-center mb-2">
-        <div className="flex ml-2">
-          {totalReactCount[0]?.remainIcon.map((react) => (
-            <div>
-              {react === 'like' && <img className="w-4" src={like} alt="" />}
-              {react === 'love' && <img className="w-4" src={love} alt="" />}
-              {react === 'care' && <img className="w-4" src={care} alt="" />}
-              {react === 'wow' && <img className="w-4" src={wow} alt="" />}
-              {react === 'sad' && <img className="w-4" src={sad} alt="" />}
-              {react === 'haha' && <img className="w-4" src={haha} alt="" />}
-              {react === 'angry' && <img className="w-4" src={angry} alt="" />}
-            </div>
-          ))}
+      <div className="flex items-center justify-between mb-2">
+        <div>
+          <div className="flex ml-2">
+            {totalReactCount[0]?.remainIcon.map((react) => (
+              <div>
+                {react === 'like' && <img className="w-4" src={like} alt="" />}
+                {react === 'love' && <img className="w-4" src={love} alt="" />}
+                {react === 'care' && <img className="w-4" src={care} alt="" />}
+                {react === 'wow' && <img className="w-4" src={wow} alt="" />}
+                {react === 'sad' && <img className="w-4" src={sad} alt="" />}
+                {react === 'haha' && <img className="w-4" src={haha} alt="" />}
+                {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+              </div>
+            ))}
+          </div>
+          <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
         </div>
-        <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
+        <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
+          <p>{blog.comments.length}</p>
+          <FontAwesomeIcon className="text-gray-400 ml-1" icon={faComment} />
+        </div>
       </div>
 
       {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
@@ -410,11 +417,31 @@ const SingleBlog = ({ blog }) => {
       {/* all-comment */}
       {
         showCommentBox && <div className="p-5">
-          {
-            blog.comments.slice(0,3).map((comment) => (
-              <p className="bg-gray-300 py-2 px-4 rounded-full my-1 bg-opacity-30">{comment.comment}</p>
-            ))
-          }
+          <>
+            {
+              blog.comments.map((comment) => (
+                <div className="flex items-start justify-start">
+                  <div>
+                    {
+                      commentProfile.flatMap((profile) => (
+                        comment.user === profile._id && <div className="avatar">
+                          <div className="w-7 rounded-full cursor-pointer">
+                            <img src={profile.image} alt="" />
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                    {commentProfile.flatMap((profile) => (
+                      comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                    ))}
+                    <p>{comment.comment}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </>
         </div>
       }
 
