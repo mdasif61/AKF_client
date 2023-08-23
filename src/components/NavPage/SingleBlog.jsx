@@ -32,6 +32,7 @@ import useReaction from "../hooks/useReaction";
 import useAllBlogs from "../hooks/useAllBlogs";
 import useTotalReaction from "../hooks/useTotalReaction";
 import useReactedProfile from "../hooks/useReactedProfile";
+import useCommentProfile from "../hooks/useCommentProfile";
 
 const SingleBlog = ({ blog }) => {
   const [axiosSecure] = useAxiosSecure()
@@ -46,6 +47,7 @@ const SingleBlog = ({ blog }) => {
   const [send, setSend] = useState(false)
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
+  const {commentProfile}=useCommentProfile(blog?._id)
   const { reacted, refetch: reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
