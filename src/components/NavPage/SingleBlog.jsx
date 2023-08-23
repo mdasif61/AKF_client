@@ -52,6 +52,7 @@ const SingleBlog = ({ blog }) => {
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
+  const [showComment, setShowComment] = useState(false)
   const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
 
   let check;
@@ -122,21 +123,21 @@ const SingleBlog = ({ blog }) => {
     commentMutation.mutate(commentRef.current.value)
   }
 
-  const commentBoxRef = useRef(null);
-  useEffect(() => {
-    const handleOutsideOfCommentBox = (event) => {
-      if (commentBoxRef.current && !commentBoxRef.current.contains(event.target)) {
-        setShowCommentBox(false)
-      }
-    };
+  // const commentBoxRef = useRef(null);
+  // useEffect(() => {
+  //   const handleOutsideOfCommentBox = (event) => {
+  //     if (commentBoxRef.current && !commentBoxRef.current.contains(event.target)) {
+  //       setShowCommentBox(false)
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', handleOutsideOfCommentBox);
+  //   document.addEventListener('mousedown', handleOutsideOfCommentBox);
 
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideOfCommentBox)
-    }
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleOutsideOfCommentBox)
+  //   }
 
-  }, [])
+  // }, [])
 
   return (
     <div className="w-full border relative bg-white rounded-lg mb-5">
@@ -401,7 +402,8 @@ const SingleBlog = ({ blog }) => {
         )}
       </div>
       {
-        showCommentBox && <div ref={commentBoxRef} onClick={() => setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${send ? 'h-20 rounded-2xl' : 'rounded-full'} border-gray-300 text-gray-500 my-4`}>
+        // ref={commentBoxRef}
+        showCommentBox && <div onClick={() => setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${send ? 'h-20 rounded-2xl' : 'rounded-full'} border-gray-300 text-gray-500 my-4`}>
 
           <textarea ref={commentRef} name="" className={`${send ? 'h-[60%]' : 'h-full'} px-4 overflow-y-hidden py-2 resize-none focus:outline-none w-full`} id="" placeholder="Write a public comment..."></textarea>
           {
@@ -419,7 +421,7 @@ const SingleBlog = ({ blog }) => {
         showCommentBox && <div className="p-5">
           <>
             {
-              blog.comments.map((comment) => (
+              showComment ? blog.comments.map((comment) => (
                 <div className="flex items-start justify-start">
                   <div>
                     {
@@ -439,7 +441,31 @@ const SingleBlog = ({ blog }) => {
                     <p>{comment.comment}</p>
                   </div>
                 </div>
-              ))
+              )) : <>
+              {" "}
+              {blog.comments.slice(0,3).map((comment) => (
+                <div className="flex items-start justify-start">
+                  <div>
+                    {
+                      commentProfile.flatMap((profile) => (
+                        comment.user === profile._id && <div className="avatar">
+                          <div className="w-7 rounded-full cursor-pointer">
+                            <img src={profile.image} alt="" />
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                    {commentProfile.flatMap((profile) => (
+                      comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                    ))}
+                    <p>{comment.comment}</p>
+                  </div>
+                </div>
+              ))}
+              {blog.comments.length>=3&&<button className="text-gray-500 font-semibold" onClick={()=>setShowComment(!showComment)}>View more comments</button>}
+              </>
             }
           </>
         </div>
