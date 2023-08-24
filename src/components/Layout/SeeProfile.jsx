@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useSeeProfile from "../hooks/useSeeProfile";
 import SeePost from "./SeePost";
 import { useState } from "react";
@@ -57,11 +57,6 @@ const SeeProfile = () => {
         <div className="grid gap-5 grid-cols-1 w-9/12 mx-auto md:grid-cols-5 h-full mt-7">
           <div className="md:col-span-2 font-semibold h-[100vh] sticky top-0 bg-gray-800 text-white p-5 rounded-xl">
             <div className="space-y-2">
-              <Link to="/dashboard/profile-setting">
-                <h1 className="text-center bg-gray-700 py-3 rounded-xl hover:bg-gray-600 mb-3">
-                  Edit Details
-                </h1>
-              </Link>
               <p>
                 <span className="font-normal">
                   <FontAwesomeIcon className="mr-2" icon={faPhone} /> Phone :

@@ -289,7 +289,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
               </div>
             ))}
           </div>
-          {totalReactCount[0]?.totalReactionCount>0&& <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:cursor-pointer hover:underline">{totalReactCount[0]?.totalReactionCount}</p>}
+          {totalReactCount[0]?.totalReactionCount > 0 && <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:cursor-pointer hover:underline">{totalReactCount[0]?.totalReactionCount}</p>}
         </div>
         {blog.comments.length > 0 && <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
           <p>{blog.comments.length}</p>
@@ -427,7 +427,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                         commentProfile.flatMap((profile) => (
                           comment.user === profile._id && <div className="avatar">
                             <div className="w-7 rounded-full cursor-pointer">
-                              <img src={profile.image} alt="" />
+                              <Link to={`/blog/see-profile/${profile?._id}`}><img src={profile.image} alt="" /></Link>
                             </div>
                           </div>
                         ))
@@ -435,7 +435,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                     </div>
                     <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
                       {commentProfile.flatMap((profile) => (
-                        comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                        comment.user === profile._id && <Link to={`/blog/see-profile/${profile?._id}`}><h3 className="font-semibold hover:underline">{profile.name}</h3></Link>
                       ))}
                       <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
                         {comment.comment.slice(0, 200)}
@@ -456,7 +456,9 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                         commentProfile.flatMap((profile) => (
                           comment.user === profile._id && <div className="avatar">
                             <div className="w-7 rounded-full cursor-pointer">
-                              <img src={profile.image} alt="" />
+                              <Link to={`/blog/see-profile/${profile?._id}`}>
+                                <img src={profile.image} alt="" />
+                              </Link>
                             </div>
                           </div>
                         ))
@@ -464,7 +466,7 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                     </div>
                     <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
                       {commentProfile.flatMap((profile) => (
-                        comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                        comment.user === profile._id && <Link to={`/blog/see-profile/${profile?._id}`}><h3 className="font-semibold hover:underline">{profile.name}</h3></Link>
                       ))}
                       <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
                         {comment.comment.slice(0, 200)}
