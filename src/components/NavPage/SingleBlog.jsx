@@ -52,8 +52,10 @@ const SingleBlog = ({ blog }) => {
   const { refetch: blogRefetch } = useAllBlogs();
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
-  const [showComment, setShowComment] = useState(false)
+  const [showComment, setShowComment] = useState(false);
+  const [showCommentText, setShowCommentText] = useState(false)
   const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
+  const commentRef = useRef(null);
 
   let check;
   if (!reactLoading && !isFetching) {
@@ -103,6 +105,7 @@ const SingleBlog = ({ blog }) => {
     {
       onSuccess: (data) => {
         if (data.modifiedCount > 0) {
+          commentRef.current.value = ''
           refetch()
           totalReactRefetch()
           reactedRefetch()
@@ -118,26 +121,9 @@ const SingleBlog = ({ blog }) => {
     }
   );
 
-  const commentRef = useRef(null);
   const submitComment = () => {
     commentMutation.mutate(commentRef.current.value)
   }
-
-  // const commentBoxRef = useRef(null);
-  // useEffect(() => {
-  //   const handleOutsideOfCommentBox = (event) => {
-  //     if (commentBoxRef.current && !commentBoxRef.current.contains(event.target)) {
-  //       setShowCommentBox(false)
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleOutsideOfCommentBox);
-
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleOutsideOfCommentBox)
-  //   }
-
-  // }, [])
 
   return (
     <div className="w-full border relative bg-white rounded-lg mb-5">
@@ -264,7 +250,7 @@ const SingleBlog = ({ blog }) => {
               : blog.photo.length > 4
                 ? "grid-cols-3"
                 : ""
-            } grid grid-cols-1 rounded-xl mt-4`}
+            } grid grid-cols-1 mt-4`}
         >
           {blog.photo.map((img, index) => (
             <div key={index} className="h-full w-full">
@@ -278,7 +264,7 @@ const SingleBlog = ({ blog }) => {
         </div>
       </div>
       <div className="flex items-center justify-between mb-2">
-        <div>
+        <div className="flex items-center">
           <div className="flex ml-2">
             {totalReactCount[0]?.remainIcon.map((react) => (
               <div>
@@ -292,12 +278,12 @@ const SingleBlog = ({ blog }) => {
               </div>
             ))}
           </div>
-          <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>
+          {totalReactCount[0]?.totalReactionCount>0&& <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:underline hover:cursor-pointer">{totalReactCount[0]?.totalReactionCount}</p>}
         </div>
-        <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
+        {blog.comments.length>0&& <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
           <p>{blog.comments.length}</p>
           <FontAwesomeIcon className="text-gray-400 ml-1" icon={faComment} />
-        </div>
+        </div>}
       </div>
 
       {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
@@ -421,50 +407,63 @@ const SingleBlog = ({ blog }) => {
         showCommentBox && <div className="p-5">
           <>
             {
-              showComment ? blog.comments.map((comment) => (
-                <div className="flex items-start justify-start">
-                  <div>
-                    {
-                      commentProfile.flatMap((profile) => (
-                        comment.user === profile._id && <div className="avatar">
-                          <div className="w-7 rounded-full cursor-pointer">
-                            <img src={profile.image} alt="" />
+              showComment ? <>
+                {blog.comments.length > 3 && <button className="text-gray-500 font-semibold mb-3" onClick={() => setShowComment(!showComment)}>See less comments</button>}
+                {blog.comments.map((comment) => (
+                  <div className="flex items-start justify-start">
+                    <div>
+                      {
+                        commentProfile.flatMap((profile) => (
+                          comment.user === profile._id && <div className="avatar">
+                            <div className="w-7 rounded-full cursor-pointer">
+                              <img src={profile.image} alt="" />
+                            </div>
                           </div>
-                        </div>
-                      ))
-                    }
+                        ))
+                      }
+                    </div>
+                    <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                      {commentProfile.flatMap((profile) => (
+                        comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                      ))}
+                      <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
+                        {comment.comment.slice(0, 200)}
+                        {" "}
+                        {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
+                      </>}</p>
+                    </div>
                   </div>
-                  <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
-                    {commentProfile.flatMap((profile) => (
-                      comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
-                    ))}
-                    <p>{comment.comment}</p>
-                  </div>
-                </div>
-              )) : <>
-              {" "}
-              {blog.comments.slice(0,3).map((comment) => (
-                <div className="flex items-start justify-start">
-                  <div>
-                    {
-                      commentProfile.flatMap((profile) => (
-                        comment.user === profile._id && <div className="avatar">
-                          <div className="w-7 rounded-full cursor-pointer">
-                            <img src={profile.image} alt="" />
+
+                ))}
+                {blog.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>See less comments</button>}
+              </> : <>
+                {" "}
+                {blog.comments.slice(0, 3).map((comment) => (
+                  <div className="flex items-start justify-start">
+                    <div>
+                      {
+                        commentProfile.flatMap((profile) => (
+                          comment.user === profile._id && <div className="avatar">
+                            <div className="w-7 rounded-full cursor-pointer">
+                              <img src={profile.image} alt="" />
+                            </div>
                           </div>
-                        </div>
-                      ))
-                    }
+                        ))
+                      }
+                    </div>
+                    <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                      {commentProfile.flatMap((profile) => (
+                        comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                      ))}
+                      <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
+                        {comment.comment.slice(0, 200)}
+                        {" "}
+                        {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
+                      </>}</p>
+                    </div>
                   </div>
-                  <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
-                    {commentProfile.flatMap((profile) => (
-                      comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
-                    ))}
-                    <p>{comment.comment}</p>
-                  </div>
-                </div>
-              ))}
-              {blog.comments.length>=3&&<button className="text-gray-500 font-semibold" onClick={()=>setShowComment(!showComment)}>View more comments</button>}
+                ))}
+                {blog.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>View more comments</button>}
               </>
             }
           </>
