@@ -126,7 +126,7 @@ const SingleBlog = ({ blog }) => {
   }
 
   return (
-    <div className="w-full border relative bg-white rounded-lg mb-5">
+    <div className="w-full relative bg-white rounded-lg mb-5">
       <div className="p-5 w-full">
         <div className="flex items-center mb-4 relative">
           <Link to={`/blog/see-profile/${blog.userId}`}>
