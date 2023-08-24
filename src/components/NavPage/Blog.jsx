@@ -16,6 +16,10 @@ const Blog = () => {
             <h1>Left Content</h1>
           </div>
           <div className="w-[40%]">
+            <div className="w-full my-4 flex h-12">
+              <input className="flex-1 focus:bg-slate-100 h-full px-5 focus:outline-none rounded-full" type="search" name="" id="" placeholder="search content..." />
+              <button className="btn rounded-full bg-black ml-2">Search</button>
+            </div>
             {allBlog.map((blog) => (
               <SingleBlog
               key={blog._id}

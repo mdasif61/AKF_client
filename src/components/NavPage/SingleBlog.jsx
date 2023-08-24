@@ -40,7 +40,7 @@ const SingleBlog = ({ blog }) => {
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
-  const { profile } = useProfile(blog.userId);
+  const { profile } = useProfile(blog?.userId);
   const [profileShow, setProfileShow] = useState(false);
   const [showReactedName, setShowReactedName] = useState(false);
   const [send, setSend] = useState(false)

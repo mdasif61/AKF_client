@@ -9,7 +9,7 @@ const useProfile = (id) => {
         ['profile', id],
         async () => {
             try {
-                const res = await axiosSecure.get(`/user-profile?id=${id}`);
+                const res = await axiosSecure.get(`/user-profile/${id}`);
                 return res.data;
             } catch (error) {
                 console.log(error);

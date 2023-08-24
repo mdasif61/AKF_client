@@ -36,6 +36,7 @@ import useReactedProfile from "../hooks/useReactedProfile";
 import useCommentProfile from "../hooks/useCommentProfile";
 
 const SeePost = ({ post, setPostUser }) => {
+  setPostUser(post?.userId);
   const [axiosSecure] = useAxiosSecure()
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
@@ -51,7 +52,6 @@ const SeePost = ({ post, setPostUser }) => {
   const { reacted, refetch: reactedRefetch } = useReactedProfile(post?.reaction, post?._id);
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction, post._id);
   const [showText, setShowText] = useState(false)
-  setPostUser(post?.userId);
   const [showComment, setShowComment] = useState(false);
   const [showCommentText, setShowCommentText] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);

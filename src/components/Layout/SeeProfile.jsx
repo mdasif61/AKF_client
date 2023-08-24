@@ -1,19 +1,17 @@
 import { Link, useParams } from "react-router-dom";
 import useSeeProfile from "../hooks/useSeeProfile";
 import SeePost from "./SeePost";
-import useAllUser from "../hooks/useAllUser";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd, faEdit, faEnvelope, faFemale, faGroupArrowsRotate, faLocation, faMale, faPhone, faPlus, faSearch, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faFemale, faGroupArrowsRotate, faLocation, faMale, faPhone, faSearch, faVideo } from "@fortawesome/free-solid-svg-icons";
 import Container from "../Container";
 import useProfile from "../hooks/useProfile";
 
 const SeeProfile = () => {
   const { id } = useParams();
   const { member, isLoading } = useSeeProfile(id);
-  const { users } = useAllUser();
   const [showBio, setShowBio] = useState(false);
-  const [postUser, setPostUser] = useState(null)
+  const [postUser, setPostUser] = useState([]);
   const { profile } = useProfile(postUser);
 
   if (isLoading) {

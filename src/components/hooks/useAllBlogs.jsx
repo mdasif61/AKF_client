@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import useAxiosSecure from './useAxiosSecure';
 
 const useAllBlogs = () => {
+    const [axiosSecure]=useAxiosSecure()
    const {data:allBlog=[],refetch,isLoading,isError, isFetching}=useQuery({
     queryKey:['all-blog'],
     queryFn:async()=>{
-        const res=await axios.get('http://localhost:5000/all-blog')
+        const res=await axiosSecure.get('/all-blog')
         return res.data;
     }
    });
