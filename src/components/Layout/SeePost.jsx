@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
@@ -9,6 +9,7 @@ import {
   faGroupArrowsRotate,
   faLocation,
   faMale,
+  faPaperPlane,
   faPhone,
   faShare,
   faThumbsUp,
@@ -32,6 +33,7 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import useAllUser from "../hooks/useAllUser";
 import useTotalReaction from "../hooks/useTotalReaction";
 import useReactedProfile from "../hooks/useReactedProfile";
+import useCommentProfile from "../hooks/useCommentProfile";
 
 const SeePost = ({ post, setPostUser }) => {
   const [axiosSecure] = useAxiosSecure()
@@ -45,11 +47,17 @@ const SeePost = ({ post, setPostUser }) => {
   const [scroll, setScroll] = useState(false);
   const [reaction, setReaction] = useState('');
   const { users } = useAllUser();
+  const { commentProfile, refetch: commentRefetch } = useCommentProfile(post?._id);
   const { reacted, refetch: reactedRefetch } = useReactedProfile(post?.reaction, post?._id);
   const { single_react, reactLoading, refetch, isFetching } = useReaction(post?.reaction, post._id);
   const [showText, setShowText] = useState(false)
   setPostUser(post?.userId);
-  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(post?._id)
+  const [showComment, setShowComment] = useState(false);
+  const [showCommentText, setShowCommentText] = useState(false);
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [send, setSend] = useState(false)
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(post?._id);
+  const commentRef = useRef(null);
 
   const confirmData = {
     header: "Are You Sure?",
@@ -99,6 +107,33 @@ const SeePost = ({ post, setPostUser }) => {
       }
     }
   )
+
+  const commentMutation = useMutation(
+    async (comment) => {
+      return await axiosSecure.patch(`/blog/comments/${post._id}?user=${users._id}`, { comment }).then(res => res.data)
+    },
+    {
+      onSuccess: (data) => {
+        if (data.modifiedCount > 0) {
+          commentRef.current.value = ''
+          refetch()
+          totalReactRefetch()
+          reactedRefetch()
+          commentRefetch()
+          seeRefetch()
+        }
+      }
+    },
+    {
+      onError: (error) => {
+        console.log(error)
+      }
+    }
+  );
+
+  const submitComment = () => {
+    commentMutation.mutate(commentRef.current.value)
+  }
 
   return (
     <>
@@ -227,7 +262,7 @@ const SeePost = ({ post, setPostUser }) => {
                 : post.photo.length > 4
                   ? "grid-cols-3"
                   : ""
-              } grid grid-cols-1 rounded-xl mt-4`}
+              } grid grid-cols-1 mt-4`}
           >
             {post.photo.map((img, index) => (
               <div key={index} className="h-full w-full">
@@ -241,21 +276,27 @@ const SeePost = ({ post, setPostUser }) => {
           </div>
         </div>
 
-        <div className="flex items-center mb-2">
-          <div className="flex ml-2">
-            {totalReactCount[0]?.remainIcon.map((react) => (
-              <div>
-                {react === 'like' && <img className="w-4" src={like} alt="" />}
-                {react === 'love' && <img className="w-4" src={love} alt="" />}
-                {react === 'care' && <img className="w-4" src={care} alt="" />}
-                {react === 'wow' && <img className="w-4" src={wow} alt="" />}
-                {react === 'sad' && <img className="w-4" src={sad} alt="" />}
-                {react === 'haha' && <img className="w-4" src={haha} alt="" />}
-                {react === 'angry' && <img className="w-4" src={angry} alt="" />}
-              </div>
-            ))}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center">
+            <div className="flex ml-2">
+              {totalReactCount[0]?.remainIcon.map((react) => (
+                <div>
+                  {react === 'like' && <img className="w-4" src={like} alt="" />}
+                  {react === 'love' && <img className="w-4" src={love} alt="" />}
+                  {react === 'care' && <img className="w-4" src={care} alt="" />}
+                  {react === 'wow' && <img className="w-4" src={wow} alt="" />}
+                  {react === 'sad' && <img className="w-4" src={sad} alt="" />}
+                  {react === 'haha' && <img className="w-4" src={haha} alt="" />}
+                  {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+                </div>
+              ))}
+            </div>
+            {totalReactCount[0]?.totalReactionCount > 0 && <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 hover:underline hover:cursor-pointer ml-2">{totalReactCount[0]?.totalReactionCount}</p>}
           </div>
-          <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 hover:underline hover:cursor-pointer ml-2">{totalReactCount[0]?.totalReactionCount}</p>
+          {post.comments.length > 0 && <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
+            <p>{post.comments.length}</p>
+            <FontAwesomeIcon className="text-gray-400 ml-1" icon={faComment} />
+          </div>}
         </div>
 
         {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
@@ -282,7 +323,7 @@ const SeePost = ({ post, setPostUser }) => {
               ) : <FontAwesomeIcon icon={faThumbsUp} />}
               <span className="ml-1">{check ? check : 'Like'}</span>
             </div>
-            <div className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
+            <div onClick={() => setShowCommentBox(!showCommentBox)} className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
               <FontAwesomeIcon icon={faComment} />{" "}
               <span className="ml-1">Comment</span>
             </div>
@@ -359,6 +400,87 @@ const SeePost = ({ post, setPostUser }) => {
             </div>
           )}
         </div>
+        {
+          // ref={commentBoxRef}
+          showCommentBox && <div onClick={() => setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${send ? 'h-20 rounded-2xl' : 'rounded-full'} border-gray-300 text-gray-500 my-4`}>
+
+            <textarea ref={commentRef} name="" className={`${send ? 'h-[60%]' : 'h-full'} px-4 overflow-y-hidden py-2 resize-none focus:outline-none w-full`} id="" placeholder="Write a public comment..."></textarea>
+            {
+              send && <div className="text-right px-5">
+                <button type="submit" onClick={submitComment} className="mb-3">
+                  <FontAwesomeIcon className="text-blue-500 hover:text-blue-600" icon={faPaperPlane} />
+                </button>
+              </div>
+            }
+          </div>
+        }
+        {/* all-comment */}
+        {
+          showCommentBox && <div className="p-5">
+            <>
+              {
+                showComment ? <>
+                  {post.comments.length > 3 && <button className="text-gray-500 font-semibold mb-3" onClick={() => setShowComment(!showComment)}>See less comments</button>}
+                  {post.comments.map((comment) => (
+                    <div className="flex items-start justify-start">
+                      <div>
+                        {
+                          commentProfile.flatMap((profile) => (
+                            comment.user === profile._id && <div className="avatar">
+                              <div className="w-7 rounded-full cursor-pointer">
+                                <img src={profile.image} alt="" />
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                        {commentProfile.flatMap((profile) => (
+                          comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                        ))}
+                        <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
+                          {comment.comment.slice(0, 200)}
+                          {" "}
+                          {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
+                        </>}</p>
+                      </div>
+                    </div>
+
+                  ))}
+                  {post.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>See less comments</button>}
+                </> : <>
+                  {" "}
+                  {post.comments.slice(0, 3).map((comment) => (
+                    <div className="flex items-start justify-start">
+                      <div>
+                        {
+                          commentProfile.flatMap((profile) => (
+                            comment.user === profile._id && <div className="avatar">
+                              <div className="w-7 rounded-full cursor-pointer">
+                                <img src={profile.image} alt="" />
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                      <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
+                        {commentProfile.flatMap((profile) => (
+                          comment.user === profile._id && <h3 className="font-semibold">{profile.name}</h3>
+                        ))}
+                        <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
+                          {comment.comment.slice(0, 200)}
+                          {" "}
+                          {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
+                        </>}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {post.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>View more comments</button>}
+                </>
+              }
+            </>
+          </div>
+        }
       </div></>
   );
 };

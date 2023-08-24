@@ -42,7 +42,6 @@ const SingleBlog = ({ blog }) => {
   const [deleteCon, setDeleteCon] = useState(false);
   const { profile } = useProfile(blog.userId);
   const [profileShow, setProfileShow] = useState(false);
-  const [showCommentBox, setShowCommentBox] = useState(false);
   const [showReactedName, setShowReactedName] = useState(false);
   const [send, setSend] = useState(false)
   const [reaction, setReaction] = useState('');
@@ -53,7 +52,8 @@ const SingleBlog = ({ blog }) => {
   const { single_react, reactLoading, isFetching, refetch } = useReaction(blog?.reaction, blog._id);
   const [showText, setShowText] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [showCommentText, setShowCommentText] = useState(false)
+  const [showCommentText, setShowCommentText] = useState(false);
+  const [showCommentBox, setShowCommentBox] = useState(false);
   const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
   const commentRef = useRef(null);
 
