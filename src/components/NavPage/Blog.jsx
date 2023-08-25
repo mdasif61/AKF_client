@@ -5,9 +5,11 @@ import Container from "../Container";
 
 import SingleBlog from "./SingleBlog";
 import useSearchBlog from "../hooks/useSearchBlog";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const Blog = () => {
   useTitle("Blog");
+  const [axiosSecure]=useAxiosSecure()
   const [searchText, setSearchText] = useState('');
   const [blogsToDisplay, setBlogsToDisplay] = useState([]);
   const { allBlog } = useAllBlogs(searchText);
@@ -21,6 +23,11 @@ const Blog = () => {
     }
   }, [searchText, allBlog, searchData]);
 
+  const handleSearch=()=>{
+    axiosSecure.get(`/search-blog/${searchText}`)
+    .then(res=>setBlogsToDisplay(res.data))
+  }
+
   return (
     <div>
       <Container>
@@ -31,7 +38,7 @@ const Blog = () => {
           <div className="w-[40%]">
             <div className="w-full my-4 flex h-12">
               <input onChange={(e) => setSearchText(e.target.value)} className="flex-1 focus:bg-slate-100 h-full px-5 focus:outline-none rounded-full" type="search" name="" id="" placeholder="search content..." />
-              <button className="btn rounded-full bg-black ml-2">Search</button>
+              <button onClick={handleSearch} className="btn rounded-full bg-black ml-2">Search</button>
             </div>
             {blogsToDisplay?.map((blog) => (
               <SingleBlog
