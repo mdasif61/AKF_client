@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import useSeeProfile from "../hooks/useSeeProfile";
 import SeePost from "./SeePost";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faFemale, faGroupArrowsRotate, faLocation, faMale, faPhone, faSearch, faVideo } from "@fortawesome/free-solid-svg-icons";
 import Container from "../Container";
 import useProfile from "../hooks/useProfile";
+import useSelfSearch from "../hooks/useSelfSearch";
 
 const SeeProfile = () => {
   const { id } = useParams();
@@ -13,6 +14,17 @@ const SeeProfile = () => {
   const [showBio, setShowBio] = useState(false);
   const [postUser, setPostUser] = useState([]);
   const { profile } = useProfile(postUser);
+  const [selfBlogSearch, setSelfBlogSearch] = useState('');
+  const { selfBlog } = useSelfSearch(selfBlogSearch, id);
+  const [displayBlog, setDisplayBlog] = useState([])
+
+  useEffect(() => {
+    if (selfBlogSearch) {
+      setDisplayBlog(selfBlog)
+    } else {
+      setDisplayBlog(member.result)
+    }
+  }, [selfBlogSearch, member.result, selfBlog])
 
   if (isLoading) {
     return (
@@ -20,7 +32,8 @@ const SeeProfile = () => {
         Loading...
       </div>
     );
-  }
+  };
+
 
   return (
     <Container>
@@ -49,8 +62,8 @@ const SeeProfile = () => {
               <FontAwesomeIcon className="mr-2" icon={faVideo} /> Videos
             </button>
             <div className="ml-2 relative h-12 border flex items-center rounded-md border-gray-600">
-              <FontAwesomeIcon className="absolute text-gray-400 px-4 left-0" icon={faSearch}/>
-              <input className="focus:outline-none text-gray-400 w-full h-full bg-black rounded-md pl-10 focus:border-2 focus:bg-gray-800 pr-4 py-2" placeholder="Search" type="search" name="" id="" />
+              <FontAwesomeIcon className="absolute text-gray-400 px-4 left-0" icon={faSearch} />
+              <input onChange={(e) => setSelfBlogSearch(e.target.value)} className="focus:outline-none text-gray-400 w-full h-full bg-black rounded-md pl-10 focus:border-2 focus:bg-gray-800 pr-4 py-2" placeholder="Search" type="search" name="" id="" />
             </div>
           </div>
         </div>
@@ -117,7 +130,7 @@ const SeeProfile = () => {
 
           </div>
           <div className="md:col-span-3">
-            {member?.result?.map((post) => (
+            {displayBlog?.map((post) => (
               <>
                 <SeePost
                   key={post._id}
