@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useTitle from "../hooks/useTitle";
 import useAllBlogs from "../hooks/useAllBlogs";
 import Container from "../Container";
 
 import SingleBlog from "./SingleBlog";
+import useSearchBlog from "../hooks/useSearchBlog";
 
 const Blog = () => {
   useTitle("Blog");
-  const { allBlog } = useAllBlogs();
+  const [searchText, setSearchText] = useState('');
+  const [blogsToDisplay, setBlogsToDisplay] = useState([]);
+  const { allBlog } = useAllBlogs(searchText);
+  const { searchData } = useSearchBlog(searchText);
+
+  useEffect(() => {
+    if (searchText) {
+      setBlogsToDisplay(searchData);
+    } else {
+      setBlogsToDisplay(allBlog);
+    }
+  }, [searchText, allBlog, searchData]);
+
   return (
     <div>
       <Container>
@@ -17,13 +30,13 @@ const Blog = () => {
           </div>
           <div className="w-[40%]">
             <div className="w-full my-4 flex h-12">
-              <input className="flex-1 focus:bg-slate-100 h-full px-5 focus:outline-none rounded-full" type="search" name="" id="" placeholder="search content..." />
+              <input onChange={(e) => setSearchText(e.target.value)} className="flex-1 focus:bg-slate-100 h-full px-5 focus:outline-none rounded-full" type="search" name="" id="" placeholder="search content..." />
               <button className="btn rounded-full bg-black ml-2">Search</button>
             </div>
-            {allBlog.map((blog) => (
+            {blogsToDisplay?.map((blog) => (
               <SingleBlog
-              key={blog._id}
-              blog={blog}
+                key={blog._id}
+                blog={blog}
               ></SingleBlog>
             ))}
           </div>
