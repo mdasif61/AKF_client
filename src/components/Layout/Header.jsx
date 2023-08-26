@@ -27,11 +27,11 @@ const Header = () => {
         <div className="relative z-50 h-[70px] flex justify-between items-center">
           <img className="h-[60%] ml-4" src={navlogo} alt="" />
           <nav className="flex items-center">
-            <NavLink to="/">Home</NavLink>
+            <NavLink className={({isActive})=>isActive?'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full':'py-2 px-4'} to="/">Home</NavLink>
             {user && <NavLink to="/dashboard/diposite">Dashboard</NavLink>}
-            <NavLink to="/blog">Blog</NavLink>
-            <NavLink to="/about">About</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
+            <NavLink className={({isActive})=>isActive?'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full':'py-2 px-4'} to="/blog">Blog</NavLink>
+            <NavLink className={({isActive})=>isActive?'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full':'py-2 px-4'} to="/about">About</NavLink>
+            <NavLink className={({isActive})=>isActive?'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full':'py-2 px-4'} to="/contact">Contact</NavLink>
             {user ? (
               <NavLink to="/">
                 <button onClick={signOut} className="login">Logout</button>
