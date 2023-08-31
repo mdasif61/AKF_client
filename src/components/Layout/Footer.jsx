@@ -7,14 +7,13 @@ import Container from "../Container";
 
 const Footer = () => {
   return (
-    <div className="footer">
-      <Container>
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col w-[50%] items-center justify-center p-5">
+    <div className="footer md:p-10 py-6">
+      <div className="flex md:flex-row flex-col items-center justify-between w-full">
+          <div className="flex flex-col md:w-[50%] w-full items-center justify-center md:p-5">
             <div>
               <img className="w-48" src={footerLogo} alt="" />
             </div>
-            <div className="mt-5">
+            <div className="mt-5 flex flex-col items-center md:space-y-0 space-y-4 md:flex-row">
               <Link to="/">Home</Link>
               <Link to="/service">Service</Link>
               <Link to="/blog">Blog</Link>
@@ -22,8 +21,8 @@ const Footer = () => {
               <Link to="/contact">Contact</Link>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center w-[50%]">
-            <div className="subscribe items-center relative flex w-[70%] h-10">
+          <div className="flex flex-col items-center mt-5 md:mt-0 justify-center w-[95%] md:w-[50%]">
+            <div className="subscribe items-center relative flex w-[90%] md:w-[70%] h-10">
               <input
                 type="email"
                 name="email"
@@ -43,7 +42,6 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </Container>
     </div>
   );
 };

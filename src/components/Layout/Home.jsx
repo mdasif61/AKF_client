@@ -9,23 +9,23 @@ const Home = () => {
   return (
     <div className="home flex flex-col items-center justify-center w-full">
       <div className="w-full flex items-center justify-center">
-        <img className="w-[65%]" src={logo} alt="" />
+        <img className="md:w-[65%] w-[95%]" src={logo} alt="" />
       </div>
-      <div className="flex relative items-center mb-10 h-12 w-[65%] justify-center mx-auto">
+    <div className="flex relative items-center md:mb-10 h-8 md:h-12 w-[95%] sm:w-[80%] md:w-[70%] justify-center mx-auto">
         <input
-          className="emailInput h-14 px-5 rounded-full"
+          className="emailInput h-12 md:h-14 px-5 rounded-full"
           type="email"
           name="email"
           id=""
           placeholder="Your Email Address"
         />
         <div className="sendBtnDiv">
-        <button className="send ml-3 h-10 w-32 rounded-full text-white">
+        <button className="send ml-3 h-8 md:h-10 w-32 rounded-full text-white">
           Send
         </button>
         </div>
       </div>
-      <div className="my-10">
+      <div className="md:my-10 my-7">
         <Link to='/diposite'><button className="get">Diposite Now</button></Link>
       </div>
     </div>

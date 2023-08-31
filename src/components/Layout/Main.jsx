@@ -9,7 +9,7 @@ const Main = () => {
   useTitle("Home");
   return (
     <>
-      <Header></Header>
+      {/* <Header></Header> */}
       <div className="min-h-screen">
         <Container>
           <Outlet></Outlet>
