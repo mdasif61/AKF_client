@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import footerLogo from "/public/Images/navLogo.png";
 import "./Css/Footer.css";
 import { FaFacebook, FaGoogle, FaInstagram, FaTwitter } from "react-icons/fa";
-import Container from "../Container";
 
 const Footer = () => {
   return (
