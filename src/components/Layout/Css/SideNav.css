@@ -9,14 +9,7 @@
   border-radius: 15px;
   padding: 40px;
   margin: 20px 0;
-  background-color: rgba(17, 130, 136, 0.096);
-  width: 25%;
-  height: 100vh;
-  position: sticky;
   top: 0;
-}
-.diposite{
-  width: 75%;
 }
 .manu p {
   margin: 15px 0;

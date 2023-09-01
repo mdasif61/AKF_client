@@ -96,7 +96,7 @@ const Diposite = () => {
       <SideNav>
         <div className="flex p-20 items-center h-full justify-center flex-col">
           <div className="mb-10">
-            <img className="w-[50%] mx-auto" src={dipoLogo} alt="" />
+            <img className="md:w-[50%] w-[95%] mx-auto" src={dipoLogo} alt="" />
             <p className="text-center font-bold">
               Provide Your Valid Diposite Info...
             </p>
@@ -104,7 +104,7 @@ const Diposite = () => {
           </div>
 
           <form onSubmit={handleDiposite}>
-            <div className="w-full dipositeInfo">
+            <div className="w-full grid md:grid-cols-2 grid-cols-1">
               <div className="inputName m-2 flex rounded-full overflow-hidden">
                 <div className="h-10 flex items-center justify-center absolute bg-cyan-700 text-white w-32 rounded-full z-30">
                   Name

@@ -32,10 +32,10 @@ const Blog = () => {
     <div>
       <Container>
         <div className="flex gap-5">
-          <div className="sticky top-0 h-screen w-[30%]">
+          <div className="sticky top-0 h-screen md:block hidden w-[30%]">
             <h1>Left Content</h1>
           </div>
-          <div className="w-[40%]">
+          <div className="md:w-[40%] w-full">
             <div className="w-full my-4 flex h-12">
               <input onChange={(e) => setSearchText(e.target.value)} className="flex-1 focus:bg-slate-100 h-full px-5 focus:outline-none rounded-full" type="search" name="" id="" placeholder="search content..." />
               <button onClick={handleSearch} className="btn rounded-full bg-black ml-2">Search</button>
@@ -47,7 +47,7 @@ const Blog = () => {
               ></SingleBlog>
             ))}
           </div>
-          <div className="sticky w-[30%] top-0 h-screen">
+          <div className="sticky w-[30%] md:block hidden top-0 h-screen">
             <h1>Left Content</h1>
           </div>
         </div>

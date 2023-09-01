@@ -5,7 +5,3 @@
     border:none;
     outline: none;
 }
-.dipositeInfo{
-    display: grid;
-    grid-template-columns: auto auto;
-}
