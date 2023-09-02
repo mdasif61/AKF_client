@@ -66,7 +66,7 @@ const Profile = () => {
   return (
     <>
       <SideNav>
-        <div className="profile shadow-lg">
+        <div className="md:my-5 md:ml-5 bg-white md:rounded-2xl md:p-10 p-5 shadow-lg">
           <div className="w-full flex md:flex-row flex-col md:sticky top-0 z-50 bg-white items-center justify-between">
             <div className="avatar">
               <div className="w-28 rounded-full">

@@ -35,7 +35,7 @@ const ProfileSetting = () => {
   return (
     <div>
       <SideNav>
-        <div className="profile shadow-lg">
+        <div className="md:my-5 md:ml-5 bg-white md:rounded-2xl md:p-10 p-5 shadow-lg">
           <div className="w-full h-full flex justify-between">
             <div className="avatar">
               <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">

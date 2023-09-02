@@ -27,11 +27,11 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-color backdrop-blur-lg z-50">
+    <div className="bg-color relative backdrop-blur-lg z-50">
       <Container>
         <div className="relative z-50 h-[70px] flex justify-between items-center">
           <img className="md:h-[60%] h-[40%] ml-4" src={navlogo} alt="" />
-          <nav className="flex items-center">
+          <nav className="flex relative items-center">
             <div className='hidden md:block'>
               <NavLink className={({ isActive }) => isActive ? 'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full' : 'py-2 px-4'} to="/">Home</NavLink>
               <NavLink className={({ isActive }) => isActive ? 'bg-[#CBE4DE] py-2 px-4 text-[#2C3333] rounded-full' : 'py-2 px-4'} to="/blog">Blogs</NavLink>
@@ -63,7 +63,7 @@ const Header = () => {
                 </span>
               </div>
               {
-                showMenu && <div className="absolute flex flex-col items-center justify-center top-11 w-96 h-auto right-0 rounded-xl bg-white backdrop-blur-md bg-opacity-50 p-3">
+             showMenu&& <div className={`absolute duration-500 flex flex-col items-center justify-center md:top-11 top-6 w-96 right-0 h-auto rounded-xl bg-white backdrop-blur-2xl bg-opacity-90 p-3`}>
 
                   {user && users && <div className="w-full flex items-center flex-col justify-center mb-3">
                     <div className="avatar mb-3 flex justify-center w-full cursor-pointer">
