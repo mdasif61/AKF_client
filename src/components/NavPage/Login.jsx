@@ -51,8 +51,8 @@ const Login = () => {
 
   return (
     <div className="h-auto register">
-      <div className="flex p-30 w-full h-full">
-        <div className="w-[50%] flex p-20 justify-center flex-col">
+      <div className="flex md:flex-row flex-col w-full h-full">
+        <div className="md:w-[50%] w-full flex md:p-20 mt-7 md:mt-0 p-5 justify-center flex-col">
           <form onSubmit={handleLogin} className="regiForm">
             <div className="formLogo">
               <img src={formLogo} alt="" />
@@ -93,7 +93,7 @@ const Login = () => {
             <p className="text-red-500">{error}</p>
           </form>
         </div>
-        <div className="w-[50%] flex items-center justify-center">
+        <div className="md:w-[50%] w-full flex items-center justify-center">
           <Lottie animationData={render} loop={true}></Lottie>
         </div>
       </div>
