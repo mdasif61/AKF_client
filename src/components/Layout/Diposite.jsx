@@ -94,9 +94,9 @@ const Diposite = () => {
   return (
     <div>
       <SideNav>
-        <div className="flex p-20 items-center h-full justify-center flex-col">
+        <div className="flex md:p-20 p-5 items-center h-full justify-center flex-col">
           <div className="mb-10">
-            <img className="md:w-[50%] w-[95%] mx-auto" src={dipoLogo} alt="" />
+            <img className="md:w-[50%] w-[65%] mx-auto" src={dipoLogo} alt="" />
             <p className="text-center font-bold">
               Provide Your Valid Diposite Info...
             </p>

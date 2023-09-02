@@ -67,14 +67,14 @@ const Profile = () => {
     <>
       <SideNav>
         <div className="profile shadow-lg">
-          <div className="w-full flex sticky top-0 h-[200px] z-50 bg-white items-center justify-between">
+          <div className="w-full flex md:flex-row flex-col md:sticky top-0 z-50 bg-white items-center justify-between">
             <div className="avatar">
               <div className="w-28 rounded-full">
                 <img src={users.image} />
               </div>
             </div>
             <div className="flex-1 ml-6 flex items-center">
-              <div>
+              <div className="text-center md:text-left my-5 md:my-0">
                 <h1 className="text-2xl">
                   {users.name}
                 </h1>
@@ -102,8 +102,9 @@ const Profile = () => {
               {isOpen && <Modal handleClose={handleClose} data={modalData} />}
             </div>
           </div>
+
           <div className="grid gap-5 grid-cols-1 md:grid-cols-5 h-full mt-7">
-            <div className="md:col-span-2 font-semibold h-[100vh] sticky top-[200px] bg-gray-800 text-white p-5 rounded-xl">
+            <div className="md:col-span-2 font-semibold max-h-screen md:sticky top-[200px] bg-gray-800 text-white p-5 rounded-xl">
               <div className="space-y-2">
                 <Link to="/dashboard/profile-setting">
                   <h1 className="text-center bg-gray-700 py-3 rounded-xl hover:bg-gray-600 mb-3">
@@ -152,7 +153,7 @@ const Profile = () => {
                 </p>
               </div>
               {blogs?.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-3 rounded-xl">
+                <div className="grid grid-cols-3 gap-2 my-7 bg-gray-700 p-3 rounded-xl">
                   {blogs.map((blog) =>
                     blog.photo.map((img, index) => (
                       <div key={index} className="avatar">

@@ -37,14 +37,14 @@ const SeeProfile = () => {
 
   return (
     <Container>
-      <div className="profile shadow-lg bg-white">
-        <div className="w-full flex items-center bg-gradient-to-t from-black to-gray-800 px-10 py-16 justify-between">
+      <div className="mb-5">
+        <div className="w-full flex md:flex-row flex-col items-center bg-gradient-to-t from-black to-gray-800 md:px-10 px-5 md:py-16 py-8 justify-between">
           <div className="avatar">
             <div className="w-28 rounded-full">
               <img src={profile.image} />
             </div>
           </div>
-          <div className="flex-1 ml-6 flex items-center">
+          <div className="flex-1 ml-6 my-5 flex items-center">
             <div>
               <h1 className="text-2xl text-white">
                 {profile.name}
@@ -67,8 +67,9 @@ const SeeProfile = () => {
             </div>
           </div>
         </div>
-        <div className="grid gap-5 grid-cols-1 w-9/12 mx-auto md:grid-cols-5 h-full mt-7">
-          <div className="md:col-span-2 font-semibold h-[100vh] sticky top-0 bg-gray-800 text-white p-5 rounded-xl">
+
+        <div className="grid gap-5 grid-cols-1 md:w-9/12 w-full mx-auto md:grid-cols-5 h-full mt-7">
+          <div className="md:col-span-2 font-semibold max-h-screen md:sticky top-0 bg-gray-800 text-white p-5 rounded-xl">
             <div className="space-y-2">
               <p>
                 <span className="font-normal">
@@ -112,7 +113,7 @@ const SeeProfile = () => {
               </p>
             </div>
             {member?.result?.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 my-7 bg-gray-700 p-3 rounded-xl">
+              <div className="grid grid-cols-3 gap-2 my-7 bg-gray-700 p-3 rounded-xl">
                 {member?.result?.map((blog) =>
                   blog.photo.map((img, index) => (
                     <div key={index} className="avatar">

@@ -116,7 +116,7 @@ const Modal = ({ handleClose, data: userInfo }) => {
           ref={closeRef}
           open
           onClick={handleFileButton}
-          className="w-5/12 p-5 rounded-xl"
+          className="md:w-5/12 w-[95%] p-5 rounded-xl"
         >
           <button
             onClick={handleClose}
