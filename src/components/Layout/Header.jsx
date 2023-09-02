@@ -27,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-color z-50">
+    <div className="bg-color backdrop-blur-lg z-50">
       <Container>
         <div className="relative z-50 h-[70px] flex justify-between items-center">
           <img className="md:h-[60%] h-[40%] ml-4" src={navlogo} alt="" />

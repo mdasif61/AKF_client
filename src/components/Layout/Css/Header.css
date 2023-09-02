@@ -1,5 +1,5 @@
 .bg-color {
-  background-color: rgb(44, 51, 51);
+  background-color: rgba(44, 51, 51, 0.795);
   color: rgb(203, 228, 222);
   position: sticky;
   top:0;
