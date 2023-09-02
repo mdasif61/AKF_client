@@ -73,7 +73,7 @@ const SideNav = ({ children }) => {
         </p>
       </div>
       <div onClick={()=>setShowSideBar(!showSideBar)} className="absolute ml-5 mt-5 z-50">
-        <div className="avatar cursor-pointer placeholder fixed md:hidden">
+        <div className="avatar duration-300 opacity-30 hover:opacity-100 cursor-pointer placeholder fixed md:hidden">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
             <FontAwesomeIcon className="text-xl" icon={faDiamondTurnRight} />
           </div>

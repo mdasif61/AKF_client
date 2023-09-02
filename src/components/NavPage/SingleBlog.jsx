@@ -177,7 +177,7 @@ const SingleBlog = ({ blog }) => {
             <div
               onMouseOver={() => setProfileShow(true)}
               onMouseOut={() => setProfileShow(false)}
-              className="p-5 bg-gray-100 shadow-md -left-1/2 top-10 flex items-center justify-center backdrop-blur-lg bg-opacity-70 z-40 rounded-xl absolute"
+              className="p-5 bg-gray-100 shadow-md md:-left-1/2 top-10 flex items-center justify-center backdrop-blur-lg bg-opacity-70 z-40 rounded-xl absolute"
             >
               <Link to={`/blog/see-profile/${blog.userId}`}>
                 <div className="avatar mr-4 p-5">
