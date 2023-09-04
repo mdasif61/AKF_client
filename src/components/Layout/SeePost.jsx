@@ -14,6 +14,7 @@ import {
   faShare,
   faThumbsUp,
   faTrash,
+  faXmark
 } from "@fortawesome/free-solid-svg-icons";
 import like from "../../../public/Icon/like.svg";
 import love from "../../../public/Icon/love.svg";
@@ -58,6 +59,8 @@ const SeePost = ({ post, setPostUser }) => {
   const [send, setSend] = useState(false)
   const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(post?._id);
   const commentRef = useRef(null);
+  const [showImg, setShowImg] = useState(false)
+  const [imgData, setImgData] = useState(null)
 
   const confirmData = {
     header: "Are You Sure?",
@@ -135,8 +138,21 @@ const SeePost = ({ post, setPostUser }) => {
     commentMutation.mutate(commentRef.current.value)
   }
 
+  const handlePostImgShow = (img) => {
+    setShowImg(true);
+    setImgData(img)
+  }
+
   return (
     <>
+      {showImg && <div className="w-full h-screen bg-zinc-300 backdrop-blur-sm bg-opacity-60 z-[100] fixed top-1/2 flex items-center justify-center left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="w-5/12 h-auto relative p-3 bg-white shadow-2xl">
+          <button onClick={() => setShowImg(false)} className="btn bg-red-500 right-5 top-5 btn-sm btn-circle border-none outline-none absolute">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+          <img className="w-full" src={imgData} alt="" />
+        </div>
+      </div>}
       <div className="w-full border relative bg-white rounded-lg mb-5">
         <div className="p-5 w-full">
           <div className="flex items-center mb-4 relative">
@@ -265,9 +281,9 @@ const SeePost = ({ post, setPostUser }) => {
               } grid grid-cols-1 mt-4`}
           >
             {post.photo.map((img, index) => (
-              <div key={index} className="h-full w-full">
+              <div onClick={() => handlePostImgShow(img)} key={index} className="h-full w-full">
                 <img
-                  className="w-full object-cover object-center"
+                  className="w-full hover:scale-95 duration-200 object-cover object-center"
                   src={img}
                   alt=""
                 />

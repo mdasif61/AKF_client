@@ -13,6 +13,7 @@ import {
   faMale,
   faPhone,
   faPlus,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal";
 import { useState } from "react";
@@ -28,7 +29,9 @@ const Profile = () => {
   const { blogs, isLoading, refetch } = useMyBlog();
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [showBio,setShowBio]=useState(false);
+  const [showBio, setShowBio] = useState(false);
+  const [showImg, setShowImg] = useState(false)
+  const [imgData, setImgData] = useState(null)
 
   const handleOpen = (data) => {
     setIsOpen(true);
@@ -63,8 +66,21 @@ const Profile = () => {
     mutation.mutate(blog);
   };
 
+  const handleShowPhoto = (img) => {
+    setShowImg(true)
+    setImgData(img)
+  }
+
   return (
     <>
+      {showImg && <div className="w-full bg-zinc-300 backdrop-blur-sm bg-opacity-60 z-[100] h-screen fixed flex items-center justify-center">
+        <div className="w-5/12 h-auto relative p-3 bg-white shadow-2xl">
+          <button onClick={() => setShowImg(false)} className="btn bg-red-500 right-5 top-5 btn-sm btn-circle border-none outline-none absolute">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+          <img className="w-full" src={imgData} alt="" />
+        </div>
+      </div>}
       <SideNav>
         <div className="md:my-5 md:ml-5 bg-white md:rounded-2xl md:p-10 p-5 shadow-lg">
           <div className="w-full flex md:flex-row flex-col md:sticky top-0 z-50 bg-white items-center justify-between">
@@ -78,10 +94,10 @@ const Profile = () => {
                 <h1 className="text-2xl">
                   {users.name}
                 </h1>
-                <h3 onClick={()=>setShowBio(!showBio)} className={` text-gray-500 text-sm ${showBio?'w-10/12':'w-auto'}`}>{showBio?users.bio:<>
-                {users?.bio?.slice(0,20)}
-                {" "}
-                {users?.bio?.length>20&& <button onClick={()=>setShowBio(!showBio)} className="text-gray-400">...see bio</button>}
+                <h3 onClick={() => setShowBio(!showBio)} className={` text-gray-500 text-sm ${showBio ? 'w-10/12' : 'w-auto'}`}>{showBio ? users.bio : <>
+                  {users?.bio?.slice(0, 20)}
+                  {" "}
+                  {users?.bio?.length > 20 && <button onClick={() => setShowBio(!showBio)} className="text-gray-400">...see bio</button>}
                 </>}</h3>
               </div>
             </div>
@@ -157,7 +173,7 @@ const Profile = () => {
                   {blogs.map((blog) =>
                     blog.photo.map((img, index) => (
                       <div key={index} className="avatar">
-                        <div className="w-24 hover:scale-95 duration-200 relative cursor-pointer rounded-xl">
+                        <div onClick={() => handleShowPhoto(img)} className="w-24 hover:scale-95 duration-200 relative cursor-pointer rounded-xl">
                           <span className="absolute w-full h-full opacity-0 hover:bg-zinc-300 z-50 hover:opacity-30"></span>
                           <img src={img} />
                         </div>
