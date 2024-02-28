@@ -36,27 +36,37 @@ import { Link } from "react-router-dom";
 import useCommentProfile from "./hooks/useCommentProfile";
 
 const MyBlog = ({ blog, modalDeletePost }) => {
-  const [axiosSecure] = useAxiosSecure()
+  const [axiosSecure] = useAxiosSecure();
   const { users } = useAllUser();
-  const { reacted, refetch: reactedRefetch } = useReactedProfile(blog?.reaction, blog?._id);
+  const { reacted, refetch: reactedRefetch } = useReactedProfile(
+    blog?.reaction,
+    blog?._id
+  );
   const [profileShow, setProfileShow] = useState(false);
-  const [showReactedName, setShowReactedName] = useState(false)
+  const [showReactedName, setShowReactedName] = useState(false);
   const [open, setOpen] = useState(false);
   const [deleteCon, setDeleteCon] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
-  const [reaction, setReaction] = useState('');
-  const { refetch: myRefetch } = useMyBlog()
-  const { commentProfile, refetch: commentRefetch } = useCommentProfile(blog?._id);
-  const { single_react, reactLoading, refetch } = useReaction(blog?.reaction, blog._id);
+  const [reaction, setReaction] = useState("");
+  const { refetch: myRefetch } = useMyBlog();
+  const { commentProfile, refetch: commentRefetch } = useCommentProfile(
+    blog?._id
+  );
+  const { single_react, reactLoading, refetch } = useReaction(
+    blog?.reaction,
+    blog._id
+  );
   const [showComment, setShowComment] = useState(false);
   const [showCommentText, setShowCommentText] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
-  const [send, setSend] = useState(false)
-  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(blog?._id);
+  const [send, setSend] = useState(false);
+  const { totalReactCount, refetch: totalReactRefetch } = useTotalReaction(
+    blog?._id
+  );
   const [showText, setShowText] = useState(false);
   const commentRef = useRef(null);
-  const [showImg, setShowImg] = useState(false)
-  const [imgData, setImgData] = useState(null)
+  const [showImg, setShowImg] = useState(false);
+  const [imgData, setImgData] = useState(null);
 
   const confirmData = {
     header: "Are You Sure?",
@@ -66,84 +76,104 @@ const MyBlog = ({ blog, modalDeletePost }) => {
   let check;
   if (!reactLoading) {
     single_react?.map((name) => {
-      check = (Object.keys(name.reaction).join(''))
+      check = Object.keys(name.reaction).join("");
     });
   }
 
   const getReactionLogo = () => {
     switch (check) {
-      case 'like': return <img src={like} alt="like" />;
-      case 'love': return <img src={love} alt="love" />;
-      case 'care': return <img src={care} alt="care" />;
-      case 'haha': return <img src={haha} alt="haha" />;
-      case 'sad': return <img src={sad} alt="sad" />;
-      case 'wow': return <img src={wow} alt="wow" />;
-      case 'angry': return <img src={angry} alt="angry" />;
-      default: return null;
+      case "like":
+        return <img src={like} alt="like" />;
+      case "love":
+        return <img src={love} alt="love" />;
+      case "care":
+        return <img src={care} alt="care" />;
+      case "haha":
+        return <img src={haha} alt="haha" />;
+      case "sad":
+        return <img src={sad} alt="sad" />;
+      case "wow":
+        return <img src={wow} alt="wow" />;
+      case "angry":
+        return <img src={angry} alt="angry" />;
+      default:
+        return null;
     }
-  }
+  };
 
   const mutation = useMutation(
     async (data) => {
-      return await axiosSecure.patch(`/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`, data).then(res => res.data);
+      return await axiosSecure
+        .patch(
+          `/blog/reaction/${blog._id}?react=${reaction}&&user=${users._id}`,
+          data
+        )
+        .then((res) => res.data);
     },
     {
       onSuccess: (data) => {
         refetch();
-        totalReactRefetch()
-        myRefetch()
-      }
+        totalReactRefetch();
+        myRefetch();
+      },
     },
     {
       onError: (error) => {
-        console.log(error)
-      }
+        console.log(error);
+      },
     }
-  )
+  );
 
   const commentMutation = useMutation(
     async (comment) => {
-      return await axiosSecure.patch(`/blog/comments/${blog._id}?user=${users._id}`, { comment }).then(res => res.data)
+      return await axiosSecure
+        .patch(`/blog/comments/${blog._id}?user=${users._id}`, { comment })
+        .then((res) => res.data);
     },
     {
       onSuccess: (data) => {
         if (data.modifiedCount > 0) {
-          commentRef.current.value = ''
-          refetch()
-          totalReactRefetch()
-          reactedRefetch()
-          commentRefetch()
-          myRefetch()
+          commentRef.current.value = "";
+          refetch();
+          totalReactRefetch();
+          reactedRefetch();
+          commentRefetch();
+          myRefetch();
         }
-      }
+      },
     },
     {
       onError: (error) => {
-        console.log(error)
-      }
+        console.log(error);
+      },
     }
   );
 
   const submitComment = () => {
-    commentMutation.mutate(commentRef.current.value)
-  }
+    commentMutation.mutate(commentRef.current.value);
+  };
 
   const handlePostImgShow = (img) => {
-    console.log(img)
+    console.log(img);
     setShowImg(true);
-    setImgData(img)
-  }
+    setImgData(img);
+  };
 
   return (
     <>
-      {showImg && <div className="w-full h-screen bg-zinc-300 backdrop-blur-sm bg-opacity-60 z-[100] fixed top-1/2 flex items-center justify-center left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="w-5/12 h-auto relative p-3 bg-white shadow-2xl">
-          <button onClick={() => setShowImg(false)} className="btn bg-red-500 right-5 top-5 btn-sm btn-circle border-none outline-none absolute">
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-          <img className="w-full" src={imgData} alt="" />
+      {showImg && (
+        <div className="w-full h-screen bg-zinc-300 backdrop-blur-sm bg-opacity-60 z-[100] fixed top-1/2 flex items-center justify-center left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="w-5/12 h-auto relative p-3 bg-white shadow-2xl">
+            <button
+              onClick={() => setShowImg(false)}
+              className="btn bg-red-500 right-5 top-5 btn-sm btn-circle border-none outline-none absolute"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+            <img className="w-full" src={imgData} alt="" />
+          </div>
         </div>
-      </div>}
+      )}
       <div className="w-full relative border mb-5">
         <div className="p-5 w-full">
           <div className="flex items-center mb-4 relative">
@@ -169,8 +199,9 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             <div className="relative">
               <FontAwesomeIcon
                 onClick={() => setOpen(!open)}
-                className={`cursor-pointer ${open && "bg-gray-200"
-                  } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
+                className={`cursor-pointer ${
+                  open && "bg-gray-200"
+                } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
                 icon={faEllipsis}
               />
 
@@ -184,7 +215,9 @@ const MyBlog = ({ blog, modalDeletePost }) => {
                       <FontAwesomeIcon className="mr-2" icon={faTrash} /> Delete
                     </li>
                     <li className="py-2 border-b cursor-pointer">
-                      <FontAwesomeIcon className="mr-2" icon={faEdit} /> Edit
+                      <Link to={`/dashboard/postedit/${blog._id}`}>
+                        <FontAwesomeIcon className="mr-2" icon={faEdit} /> Edit
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -257,22 +290,40 @@ const MyBlog = ({ blog, modalDeletePost }) => {
           )}
           {/* profile end */}
 
-          <p onClick={() => setShowText(!showText)}>{showText ? blog.text : <>
-            {blog.text.slice(0, 150)}
-            {" "}
-            {blog.text.length > 150 && <button className="text-gray-400 text-base" onClick={() => setShowText(!showText)}>see more</button>}
-          </>}</p>
+          <p onClick={() => setShowText(!showText)}>
+            {showText ? (
+              blog.text
+            ) : (
+              <>
+                {blog.text.slice(0, 150)}{" "}
+                {blog.text.length > 150 && (
+                  <button
+                    className="text-gray-400 text-base"
+                    onClick={() => setShowText(!showText)}
+                  >
+                    see more
+                  </button>
+                )}
+              </>
+            )}
+          </p>
           <div
-            className={`overflow-hidden avatar ${blog.photo.length && "h-56"
-              } object-cover ${blog.photo.length > 2 && blog.photo.length <= 4
+            className={`overflow-hidden avatar ${
+              blog.photo.length && "h-56"
+            } object-cover ${
+              blog.photo.length > 2 && blog.photo.length <= 4
                 ? "grid-cols-2"
                 : blog.photo.length > 4
-                  ? "grid-cols-3"
-                  : ""
-              } grid grid-cols-1 rounded-xl mt-4`}
+                ? "grid-cols-3"
+                : ""
+            } grid grid-cols-1 rounded-xl mt-4`}
           >
             {blog?.photo?.map((img, index) => (
-              <div onClick={() => handlePostImgShow(img)} key={index} className="h-full w-full">
+              <div
+                onClick={() => handlePostImgShow(img)}
+                key={index}
+                className="h-full w-full"
+              >
                 <img
                   className="w-full hover:scale-95 duration-200 object-cover object-center"
                   src={img}
@@ -296,34 +347,63 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             <div className="flex ml-2">
               {totalReactCount[0]?.remainIcon.map((react) => (
                 <div>
-                  {react === 'like' && <img className="w-4" src={like} alt="" />}
-                  {react === 'love' && <img className="w-4" src={love} alt="" />}
-                  {react === 'care' && <img className="w-4" src={care} alt="" />}
-                  {react === 'wow' && <img className="w-4" src={wow} alt="" />}
-                  {react === 'sad' && <img className="w-4" src={sad} alt="" />}
-                  {react === 'haha' && <img className="w-4" src={haha} alt="" />}
-                  {react === 'angry' && <img className="w-4" src={angry} alt="" />}
+                  {react === "like" && (
+                    <img className="w-4" src={like} alt="" />
+                  )}
+                  {react === "love" && (
+                    <img className="w-4" src={love} alt="" />
+                  )}
+                  {react === "care" && (
+                    <img className="w-4" src={care} alt="" />
+                  )}
+                  {react === "wow" && <img className="w-4" src={wow} alt="" />}
+                  {react === "sad" && <img className="w-4" src={sad} alt="" />}
+                  {react === "haha" && (
+                    <img className="w-4" src={haha} alt="" />
+                  )}
+                  {react === "angry" && (
+                    <img className="w-4" src={angry} alt="" />
+                  )}
                 </div>
               ))}
             </div>
-            {totalReactCount[0]?.totalReactionCount > 0 && <p onMouseOver={() => setShowReactedName(true)} onMouseOut={() => setShowReactedName(false)} className="text-gray-500 ml-2 hover:cursor-pointer hover:underline">{totalReactCount[0]?.totalReactionCount}</p>}
+            {totalReactCount[0]?.totalReactionCount > 0 && (
+              <p
+                onMouseOver={() => setShowReactedName(true)}
+                onMouseOut={() => setShowReactedName(false)}
+                className="text-gray-500 ml-2 hover:cursor-pointer hover:underline"
+              >
+                {totalReactCount[0]?.totalReactionCount}
+              </p>
+            )}
           </div>
-          {blog.comments.length > 0 && <div onClick={() => setShowCommentBox(!showCommentBox)} className="mr-3 flex items-center hover:underline cursor-pointer justify-center">
-            <p>{blog.comments.length}</p>
-            <FontAwesomeIcon className="text-gray-400 ml-1" icon={faComment} />
-          </div>}
+          {blog.comments.length > 0 && (
+            <div
+              onClick={() => setShowCommentBox(!showCommentBox)}
+              className="mr-3 flex items-center hover:underline cursor-pointer justify-center"
+            >
+              <p>{blog.comments.length}</p>
+              <FontAwesomeIcon
+                className="text-gray-400 ml-1"
+                icon={faComment}
+              />
+            </div>
+          )}
         </div>
 
-        {showReactedName && <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
-          {reacted.map((name) => <p className="text-sm">{name.name}</p>)}
-        </div>}
+        {showReactedName && (
+          <div className="absolute left-10 bg-gray-200 bg-opacity-80 z-50 p-2 rounded-lg">
+            {reacted.map((name) => (
+              <p className="text-sm">{name.name}</p>
+            ))}
+          </div>
+        )}
 
         <div className="w-full relative border-t p-2">
           <div className="w-full flex justify-between items-center">
             <div
               onClick={() => {
-                setReaction(check ? check : 'like'),
-                  mutation.mutate(blog)
+                setReaction(check ? check : "like"), mutation.mutate(blog);
               }}
               onMouseOver={() => setLikeBox(true)}
               onMouseOut={() => setLikeBox(false)}
@@ -331,14 +411,17 @@ const MyBlog = ({ blog, modalDeletePost }) => {
             >
               {check ? (
                 <div className=" hover:scale-125 duration-300 mx-1 text-gray-400 rounded-full w-5">
-                  <span>
-                    {getReactionLogo()}
-                  </span>
+                  <span>{getReactionLogo()}</span>
                 </div>
-              ) : <FontAwesomeIcon icon={faThumbsUp} />}
-              <span className="ml-1">{check ? check : 'Like'}</span>
+              ) : (
+                <FontAwesomeIcon icon={faThumbsUp} />
+              )}
+              <span className="ml-1">{check ? check : "Like"}</span>
             </div>
-            <div onClick={() => setShowCommentBox(!showCommentBox)} className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md">
+            <div
+              onClick={() => setShowCommentBox(!showCommentBox)}
+              className="hover:bg-gray-200 duration-300 cursor-pointer p-2 font-semibold text-gray-500 text-center rounded-md"
+            >
               <FontAwesomeIcon icon={faComment} />{" "}
               <span className="ml-1">Comment</span>
             </div>
@@ -355,58 +438,73 @@ const MyBlog = ({ blog, modalDeletePost }) => {
               className="absolute flex -top-10 shadow-md justify-between items-center bg-white border rounded-full px-3 py-2"
             >
               <div className="avatar placeholder">
-                <div onClick={() => {
-                  setReaction('like'),
-                    mutation.mutate(blog)
-                }} className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("like"), mutation.mutate(blog);
+                  }}
+                  className="bg-blue-600 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={like} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('love')
-                  mutation.mutate(blog)
-                }} className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("love");
+                    mutation.mutate(blog);
+                  }}
+                  className="bg-red-500 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={love} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('care'),
-                    mutation.mutate(blog)
-                }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("care"), mutation.mutate(blog);
+                  }}
+                  className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={care} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('haha'),
-                    mutation.mutate(blog)
-                }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("haha"), mutation.mutate(blog);
+                  }}
+                  className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={haha} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('wow'),
-                    mutation.mutate(blog)
-                }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("wow"), mutation.mutate(blog);
+                  }}
+                  className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={wow} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('sad'),
-                    mutation.mutate(blog)
-                }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("sad"), mutation.mutate(blog);
+                  }}
+                  className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={sad} alt="" />
                   </span>
                 </div>
-                <div onClick={() => {
-                  setReaction('angry'),
-                    mutation.mutate(blog)
-                }} className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8">
+                <div
+                  onClick={() => {
+                    setReaction("angry"), mutation.mutate(blog);
+                  }}
+                  className="bg-orange-400 hover:scale-125 duration-300 mx-1 text-neutral-content rounded-full w-8"
+                >
                   <span>
                     <img src={angry} alt="" />
                   </span>
@@ -417,88 +515,181 @@ const MyBlog = ({ blog, modalDeletePost }) => {
         </div>
         {
           // ref={commentBoxRef}
-          showCommentBox && <div onClick={() => setSend(!send)} className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${send ? 'h-20 rounded-2xl' : 'rounded-full'} border-gray-300 text-gray-500 my-4`}>
-
-            <textarea ref={commentRef} name="" className={`${send ? 'h-[60%]' : 'h-full'} px-4 overflow-y-hidden py-2 resize-none focus:outline-none w-full`} id="" placeholder="Write a public comment..."></textarea>
-            {
-              send && <div className="text-right px-5">
-                <button type="submit" onClick={submitComment} className="mb-3">
-                  <FontAwesomeIcon className="text-blue-500 hover:text-blue-600" icon={faPaperPlane} />
-                </button>
-              </div>
-            }
-          </div>
+          showCommentBox && (
+            <div
+              onClick={() => setSend(!send)}
+              className={`w-11/12 flex flex-col h-10 mx-auto border overflow-hidden ${
+                send ? "h-20 rounded-2xl" : "rounded-full"
+              } border-gray-300 text-gray-500 my-4`}
+            >
+              <textarea
+                ref={commentRef}
+                name=""
+                className={`${
+                  send ? "h-[60%]" : "h-full"
+                } px-4 overflow-y-hidden py-2 resize-none focus:outline-none w-full`}
+                id=""
+                placeholder="Write a public comment..."
+              ></textarea>
+              {send && (
+                <div className="text-right px-5">
+                  <button
+                    type="submit"
+                    onClick={submitComment}
+                    className="mb-3"
+                  >
+                    <FontAwesomeIcon
+                      className="text-blue-500 hover:text-blue-600"
+                      icon={faPaperPlane}
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          )
         }
 
         {/* all-comment */}
-        {
-          showCommentBox && <div className="p-5">
+        {showCommentBox && (
+          <div className="p-5">
             <>
-              {
-                showComment ? <>
-                  {blog.comments.length > 3 && <button className="text-gray-500 font-semibold mb-3" onClick={() => setShowComment(!showComment)}>See less comments</button>}
+              {showComment ? (
+                <>
+                  {blog.comments.length > 3 && (
+                    <button
+                      className="text-gray-500 font-semibold mb-3"
+                      onClick={() => setShowComment(!showComment)}
+                    >
+                      See less comments
+                    </button>
+                  )}
                   {blog.comments.map((comment) => (
                     <div className="flex items-start justify-start">
                       <div>
-                        {
-                          commentProfile.flatMap((profile) => (
-                            comment.user === profile._id && <div className="avatar">
-                              <div className="w-7 rounded-full cursor-pointer">
-                                <Link to={`/blog/see-profile/${profile?._id}`}><img src={profile.image} alt="" /></Link>
+                        {commentProfile.flatMap(
+                          (profile) =>
+                            comment.user === profile._id && (
+                              <div className="avatar">
+                                <div className="w-7 rounded-full cursor-pointer">
+                                  <Link
+                                    to={`/blog/see-profile/${profile?._id}`}
+                                  >
+                                    <img src={profile.image} alt="" />
+                                  </Link>
+                                </div>
                               </div>
-                            </div>
-                          ))
-                        }
+                            )
+                        )}
                       </div>
                       <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
-                        {commentProfile.flatMap((profile) => (
-                          comment.user === profile._id && <Link to={`/blog/see-profile/${profile?._id}`}><h3 className="font-semibold hover:underline">{profile.name}</h3></Link>
-                        ))}
-                        <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
-                          {comment.comment.slice(0, 200)}
-                          {" "}
-                          {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
-                        </>}</p>
+                        {commentProfile.flatMap(
+                          (profile) =>
+                            comment.user === profile._id && (
+                              <Link to={`/blog/see-profile/${profile?._id}`}>
+                                <h3 className="font-semibold hover:underline">
+                                  {profile.name}
+                                </h3>
+                              </Link>
+                            )
+                        )}
+                        <p onClick={() => setShowCommentText(!showCommentText)}>
+                          {showCommentText ? (
+                            comment.comment
+                          ) : (
+                            <>
+                              {comment.comment.slice(0, 200)}{" "}
+                              {comment.comment.length > 200 && (
+                                <button
+                                  onClick={() =>
+                                    setShowCommentText(!showCommentText)
+                                  }
+                                  className="text-gray-500 hover:underline font-semibold"
+                                >
+                                  ...see more
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </p>
                       </div>
                     </div>
-
                   ))}
-                  {blog.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>See less comments</button>}
-                </> : <>
+                  {blog.comments.length > 3 && (
+                    <button
+                      className="text-gray-500 font-semibold"
+                      onClick={() => setShowComment(!showComment)}
+                    >
+                      See less comments
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
                   {" "}
                   {blog.comments.slice(0, 3).map((comment) => (
                     <div className="flex items-start justify-start">
                       <div>
-                        {
-                          commentProfile.flatMap((profile) => (
-                            comment.user === profile._id && <div className="avatar">
-                              <div className="w-7 rounded-full cursor-pointer">
-                                <Link to={`/blog/see-profile/${profile?._id}`}>
-                                  <img src={profile.image} alt="" />
-                                </Link>
+                        {commentProfile.flatMap(
+                          (profile) =>
+                            comment.user === profile._id && (
+                              <div className="avatar">
+                                <div className="w-7 rounded-full cursor-pointer">
+                                  <Link
+                                    to={`/blog/see-profile/${profile?._id}`}
+                                  >
+                                    <img src={profile.image} alt="" />
+                                  </Link>
+                                </div>
                               </div>
-                            </div>
-                          ))
-                        }
+                            )
+                        )}
                       </div>
                       <div className="bg-gray-300 py-2 px-4 rounded-2xl ml-1 mb-2 bg-opacity-30">
-                        {commentProfile.flatMap((profile) => (
-                          comment.user === profile._id && <Link to={`/blog/see-profile/${profile?._id}`}><h3 className="font-semibold hover:underline">{profile.name}</h3></Link>
-                        ))}
-                        <p onClick={() => setShowCommentText(!showCommentText)}>{showCommentText ? comment.comment : <>
-                          {comment.comment.slice(0, 200)}
-                          {" "}
-                          {comment.comment.length > 200 && <button onClick={() => setShowCommentText(!showCommentText)} className="text-gray-500 hover:underline font-semibold">...see more</button>}
-                        </>}</p>
+                        {commentProfile.flatMap(
+                          (profile) =>
+                            comment.user === profile._id && (
+                              <Link to={`/blog/see-profile/${profile?._id}`}>
+                                <h3 className="font-semibold hover:underline">
+                                  {profile.name}
+                                </h3>
+                              </Link>
+                            )
+                        )}
+                        <p onClick={() => setShowCommentText(!showCommentText)}>
+                          {showCommentText ? (
+                            comment.comment
+                          ) : (
+                            <>
+                              {comment.comment.slice(0, 200)}{" "}
+                              {comment.comment.length > 200 && (
+                                <button
+                                  onClick={() =>
+                                    setShowCommentText(!showCommentText)
+                                  }
+                                  className="text-gray-500 hover:underline font-semibold"
+                                >
+                                  ...see more
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </p>
                       </div>
                     </div>
                   ))}
-                  {blog.comments.length > 3 && <button className="text-gray-500 font-semibold" onClick={() => setShowComment(!showComment)}>View more comments</button>}
+                  {blog.comments.length > 3 && (
+                    <button
+                      className="text-gray-500 font-semibold"
+                      onClick={() => setShowComment(!showComment)}
+                    >
+                      View more comments
+                    </button>
+                  )}
                 </>
-              }
+              )}
             </>
           </div>
-        }
+        )}
       </div>
     </>
   );

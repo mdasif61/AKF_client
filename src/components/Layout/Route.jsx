@@ -15,6 +15,7 @@ import SinglePost from "./SinglePost";
 import ProfileSetting from "./ProfileSetting";
 import Security from "./Security";
 import SeeProfile from "./SeeProfile";
+import PostEdit from "../PostEdit";
 
 const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path:'postedit/:id',
+        element:<PrivateRoute><PostEdit></PostEdit></PrivateRoute>
+      }
     ],
   },
 ]);

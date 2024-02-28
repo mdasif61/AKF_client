@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
-  faEdit,
-  faEllipsis,
   faEnvelope,
   faFemale,
   faGroupArrowsRotate,
@@ -40,7 +38,6 @@ const SingleBlog = ({ blog }) => {
 
   const [open, setOpen] = useState(false);
   const [likeBox, setLikeBox] = useState(false);
-  const [deleteCon, setDeleteCon] = useState(false);
   const { profile } = useProfile(blog?.userId);
   const [profileShow, setProfileShow] = useState(false);
   const [showReactedName, setShowReactedName] = useState(false);
@@ -165,30 +162,6 @@ const SingleBlog = ({ blog }) => {
                 <br />
                 {/* <small>{moment(postDate).fromNow()}</small> TODO */}
               </h3>
-            </div>
-            <div className="relative">
-              <FontAwesomeIcon
-                onClick={() => setOpen(!open)}
-                className={`cursor-pointer ${open && "bg-gray-200"
-                  } hover:bg-gray-200 p-2 h-4 w-4 duration-300 rounded-full`}
-                icon={faEllipsis}
-              />
-
-              {open && (
-                <div className="bg-white border z-50 w-36 rounded-lg p-3 absolute right-0">
-                  <ul className="text-gray-500">
-                    <li
-                      onClick={() => setDeleteCon(true)}
-                      className="py-2 border-b cursor-pointer"
-                    >
-                      <FontAwesomeIcon className="mr-2" icon={faTrash} /> Delete
-                    </li>
-                    <li className="py-2 border-b cursor-pointer">
-                      <FontAwesomeIcon className="mr-2" icon={faEdit} /> Edit
-                    </li>
-                  </ul>
-                </div>
-              )}
             </div>
             {/* profile start */}
             {profileShow && (
