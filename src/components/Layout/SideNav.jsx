@@ -34,7 +34,7 @@ const SideNav = ({ children }) => {
             <FontAwesomeIcon icon={faClockRotateLeft} /> Diposite History
           </NavLink>
         </p>
-        <p onMouseOver={() => setShow(true)} onClick={() => setShow(!show)}>
+        <p onClick={() => setShow(!show)}>
           <NavLink className="manu-p">
             <FontAwesomeIcon icon={faGear} /> Settings
           </NavLink>
