@@ -20,6 +20,7 @@ const PostEdit = () => {
   const [loading, setLoading] = useState(true);
   const { handleSubmit, register, setValue } = useForm();
   const [deleteLoad, setDeleteLoad] = useState({});
+  const [afterLoadImg, setAfterLoadImg] = useState({});
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +46,18 @@ const PostEdit = () => {
     return () => {
       source.cancel("component unmounted");
     };
-  }, [id, deleteLoad]);
+  }, [id, deleteLoad, afterLoadImg]);
+
+  const updateMutation = useMutation(
+    async (data) => {
+      return axiosSecure.patch(`/updateBlog/${id}`, data);
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    }
+  );
 
   const handleChange = (event) => {
     setLoading(true);
@@ -63,13 +75,16 @@ const PostEdit = () => {
       body: formData,
     })
       .then((res) => res.json())
-      .then((imageData) => {
+      .then(async (imageData) => {
         if (imageData.success) {
           const imageUrl = imageData.data.display_url;
           setImage((prevImg) => [imageUrl, ...prevImg]);
-          const response = axiosSecure.patch(
+          const response = await axiosSecure.patch(
             `/update-blog/${encodeURIComponent(imageUrl)}?blogId=${id}`
           );
+          if (response.status === 200) {
+            setAfterLoadImg(response.data);
+          }
         }
         setLoading(false);
       });
@@ -85,11 +100,9 @@ const PostEdit = () => {
     }
   };
 
-  const updateMutation = useMutation(async (data) => {
-    return axiosSecure.patch(`/updateBlog/${id}`, data).then(res.data);
-  });
-
-  const handleUpdateBlog = () => {};
+  const onSubmit = (data) => {
+    updateMutation.mutate(data);
+  };
 
   const handleClick = () => {
     fileInputRef.current.click();
@@ -108,68 +121,71 @@ const PostEdit = () => {
             <h3 className="font-bold">{users?.name}</h3>
           </div>
         </div>
-        <div>
-          <textarea
-            defaultValue={editPost?.text}
-            className="w-full resize-none border-none outline-none p-2"
-          ></textarea>
-        </div>
-        <div
-          className={`relative ${
-            editPost?.photo.length && "border rounded-xl"
-          }`}
-        >
-          <div
-            className={`overflow-hidden w-full avatar object-cover ${
-              editPost?.photo.length < 3
-                ? "grid-cols-2"
-                : "md:grid-cols-3 grid-cols-2"
-            } grid rounded-xl mt-4`}
-          >
-            {editPost?.photo?.map((img, index) => (
-              <div key={index} className="h-full relative w-full">
-                <button
-                  onClick={() => removeImg(img)}
-                  className="absolute z-50 right-3 top-3 bg-opacity-60 hover:bg-opacity-100 duration-300 bg-gray-300 btn-circle btn-xs"
-                >
-                  <FontAwesomeIcon className="" icon={faXmark} />
-                </button>
-                <img
-                  className="w-full object-cover object-center"
-                  src={img}
-                  alt=""
-                />
-              </div>
-            ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <textarea
+              {...register("status")}
+              defaultValue={editPost?.text}
+              className="w-full resize-none border-none outline-none p-2"
+            ></textarea>
           </div>
           <div
-            onClick={handleClick}
-            className={`absolute text-gray-400 flex items-center justify-center ${
-              image &&
-              "bg-zinc-800 hover:bg-opacity-100 bg-opacity-90 px-4 py-1 bottom-5 rounded-full right-5"
+            className={`relative ${
+              editPost?.photo.length && "border rounded-xl"
             }`}
           >
-            <FontAwesomeIcon
-              className="text-xl mr-2 cursor-pointer text-green-500 py-2"
-              icon={faImage}
-            />{" "}
-            Add Photo
-            <input
-              {...register("photo")}
-              className="hidden"
-              onChange={handleChange}
-              ref={fileInputRef}
-              type="file"
-              id=""
-            />
+            <div
+              className={`overflow-hidden w-full avatar object-cover ${
+                editPost?.photo.length < 3
+                  ? "grid-cols-2"
+                  : "md:grid-cols-3 grid-cols-2"
+              } grid rounded-xl mt-4`}
+            >
+              {editPost?.photo?.map((img, index) => (
+                <div key={index} className="h-full relative w-full">
+                  <button
+                    onClick={() => removeImg(img)}
+                    className="absolute z-50 right-3 top-3 bg-opacity-60 hover:bg-opacity-100 duration-300 bg-gray-300 btn-circle btn-xs"
+                  >
+                    <FontAwesomeIcon className="" icon={faXmark} />
+                  </button>
+                  <img
+                    className="w-full object-cover object-center"
+                    src={img}
+                    alt=""
+                  />
+                </div>
+              ))}
+            </div>
+            <div
+              onClick={handleClick}
+              className={`absolute text-gray-400 flex items-center justify-center ${
+                image &&
+                "bg-zinc-800 hover:bg-opacity-100 bg-opacity-90 px-4 py-1 bottom-5 rounded-full right-5"
+              }`}
+            >
+              <FontAwesomeIcon
+                className="text-xl mr-2 cursor-pointer text-green-500 py-2"
+                icon={faImage}
+              />{" "}
+              Add Photo
+              <input
+                {...register("photo")}
+                className="hidden"
+                onChange={handleChange}
+                ref={fileInputRef}
+                type="file"
+                id=""
+              />
+            </div>
           </div>
-        </div>
-        <button
-          onClick={handleUpdateBlog}
-          className="btn btn-block mt-5 bg-green-600 border-none outline-none hover:bg-green-700"
-        >
-          Done
-        </button>
+          <button
+            disabled={loading}
+            className="btn btn-block mt-5 bg-green-600 border-none outline-none hover:bg-green-700"
+          >
+            Done
+          </button>
+        </form>
       </div>
     </SideNav>
   );
